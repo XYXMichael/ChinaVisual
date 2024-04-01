@@ -1,0 +1,42 @@
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    /* 两列 */
+    grid-auto-rows: minmax(300px, auto);
+    /* 三行 */
+    gap: 10px;
+    /* 网格间距 */
+}
+
+.cell {
+    border: 1px solid #ccc;
+    /* 单元格边框 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#cell1 {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 3;
+}
+#box2 {
+    width: 400px;
+    height: 400px;
+}
+
+#box1 {
+    width: 100px;
+    height: 100px;
+    background-color: rgb(21, 0, 255);
+    position: absolute;
+}
+
+#box3 {
+    width: 100px;
+    height: 100px;
+    background-color: rgb(0, 255, 60);
+    position: relative;
+}

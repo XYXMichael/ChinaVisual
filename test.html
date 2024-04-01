@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./test.css" />
+    <script src="echarts.min.js"></script>
+    
+
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="grid">
+      <div class="cell"><div class="box" id="box1"></div></div>
+      <div class="cell" id="cell1">
+        <div class="box" id="box2"></div>
+      </div>
+      <div class="cell"><div class="box" id="box3"></div></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+    </div>
+  </body>
+  <script>
+    console.log(document.getElementById("box1"))
+    document.addEventListener("DOMContentLoaded", () => {
+      let dragged = null;
+    
+      document.querySelectorAll(".box").forEach((box) => {
+        box.draggable = true;
+    
+        box.addEventListener("dragstart", (event) => {
+          dragged = event.target; // 被拖动的元素
+          setTimeout(() => (event.target.style.opacity = "0.5"), 0);
+        });
+    
+        box.addEventListener("dragend", (event) => {
+          event.target.style.opacity = ""; // 重置透明度
+        });
+      });
+    
+      document.querySelectorAll(".cell").forEach((cell) => {
+        cell.addEventListener("dragover", (event) => {
+          event.preventDefault(); // 允许放置
+        });
+    
+        cell.addEventListener("drop", (event) => {
+          event.preventDefault();
+          if (dragged) {
+            const targetCell = event.target.closest(".cell");
+            // 开始移动逻辑
+            moveBoxToNextAvailableCell(targetCell);
+            // 将被拖动的 box 放到目标单元格（已经被腾空）
+            targetCell.appendChild(dragged);
+          }
+        });
+      });
+    
+      function moveBoxToNextAvailableCell(cell) {
+        let currentCell = cell;
+        let nextCell =
+          currentCell.nextElementSibling ||
+          currentCell.parentNode.firstElementChild; // 循环逻辑：如果是最后一个单元格，则跳到第一个
+        if (currentCell.contains(dragged)) {
+          // 如果当前单元格是被拖动的 box 的起始点，无需移动
+          return;
+        }
+        if (currentCell.querySelector(".box")) {
+          // 如果当前单元格已有 box，则先将这个 box 移动到下一个可用的单元格
+          moveBoxToNextAvailableCell(nextCell);
+        }
+        // 将当前单元格的 box 移动到下一个单元格
+        let boxToMove = currentCell.querySelector(".box");
+        if (boxToMove) {
+          nextCell.appendChild(boxToMove);
+        }
+      }
+    
+      // 修改这里以添加右键拖曳调整大小的功能
+      const cells = document.querySelectorAll(".cell");
+      cells.forEach((cell) => {
+        cell.addEventListener("mousedown", (e) => {
+          cell.addEventListener("contextmenu", (e) => {
+      e.preventDefault(); // 阻止默认的右键菜单
+    });
+          if (e.button === 2) { // 检查是否是右键点击
+            e.preventDefault(); // 阻止默认的右键菜单
+            let startX = e.clientX;
+            let startY = e.clientY;
+            let startWidth = parseInt(document.defaultView.getComputedStyle(cell).width, 10);
+            let startHeight = parseInt(document.defaultView.getComputedStyle(cell).height, 10);
+    
+            function doDrag(e) {
+              cell.style.width = startWidth + e.clientX - startX + "px";
+              cell.style.height = startHeight + e.clientY - startY + "px";
+            }
+    
+            function stopDrag() {
+              document.documentElement.removeEventListener("mousemove", doDrag, false);
+              document.documentElement.removeEventListener("mouseup", stopDrag, false);
+            }
+    
+            document.documentElement.addEventListener("mousemove", doDrag, false);
+            document.documentElement.addEventListener("mouseup", stopDrag, false);
+          }
+        });
+      });
+    });
+    </script>
+    <script src="chinamap.js"></script>
+</html>
