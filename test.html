@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="./test.css" />
   <script src="echarts.min.js"></script>
 
-
   <title>Document</title>
 </head>
 
@@ -25,8 +24,9 @@
 
     <div class="cell">
       <div class="box control" id="box1">
-        <div id="title">
-          2013年12月07日
+        <div id="date_title">
+      <input type="date" id="date_select" min="2013-01-01" max="2018-12-31" value="2013-01-01">
+    </el-date-picker>
         </div>
         <div class="container">
           <div class="column first-column">
@@ -80,9 +80,15 @@
             </div>
           </div>
           <div class="column second-column">
-            <div class="item">内蒙古自治区</div>
             <div class="item">
-              </svg>环形进度条</div>
+              <p id="province">北京</p>
+            </div>
+            <div class="item">
+              </svg>
+              <div id = "donut">
+
+              </div>
+            </div>
           </div>
         </div>
       </div>
