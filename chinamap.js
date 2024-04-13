@@ -347,7 +347,7 @@ function getData() {
           data.push(row[16]);
           data.push(
             calculateWindDirection(row[9], row[10]) +
-              Math.sqrt(row[9] * row[9], row[10] * row[10])
+            Math.sqrt(row[9] * row[9], row[10] * row[10])
           );
           data.push(row[11] - 272.15);
           data.push(row[12]);
@@ -417,6 +417,7 @@ myChart.on("click", function (item) {
       console.log(provinceToEnglish[province_name]);
       // 绘制地图
       echarts.registerMap(provinceToEnglish[province_name], provinceGeoJson); // 注册地图数据
+      myChart.clear()
       myChart.setOption({
         series: [
           {
@@ -444,7 +445,8 @@ change_button.addEventListener("click", function () {
       })
       .then(function (chinaGeoJson) {
         // 隐藏加载动画
-        myChart.hideLoading();
+        // myChart.hideLoading();
+        myChart.clear()
 
         // 绘制地图
         echarts.registerMap("china", chinaGeoJson); // 注册地图数据
@@ -452,6 +454,8 @@ change_button.addEventListener("click", function () {
           series: [
             {
               type: "map",
+              // center: ["50%", "45%"],
+
               map: "china", // 使用注册的地图数据
               roam: true, // 允许缩放和平移漫游
               // 设置缩放的比例
