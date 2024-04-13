@@ -99,29 +99,29 @@ donutChart4.setOption(option)
 donutChart5.setOption(option)
 donutChart6.setOption(option)
 
-function calculateWindDirection(u,v) {
+function calculateWindDirection(u, v) {
   var windAngle = Math.atan2(u, v) * (180 / Math.PI);
   windAngle = (windAngle + 360) % 360; // 转换为0-360度范围内的角度
   console.log(u)
   // 返回风向的字符串描述
   if (windAngle >= 337.5 || windAngle < 22.5) {
-      return "北风";
+    return "北风";
   } else if (windAngle >= 22.5 && windAngle < 67.5) {
-      return "东北风";
+    return "东北风";
   } else if (windAngle >= 67.5 && windAngle < 112.5) {
-      return "东风";
+    return "东风";
   } else if (windAngle >= 112.5 && windAngle < 157.5) {
-      return "东南风";
+    return "东南风";
   } else if (windAngle >= 157.5 && windAngle < 202.5) {
-      return "南风";
+    return "南风";
   } else if (windAngle >= 202.5 && windAngle < 247.5) {
-      return "西南风";
+    return "西南风";
   } else if (windAngle >= 247.5 && windAngle < 292.5) {
-      return "西风";
+    return "西风";
   } else if (windAngle >= 292.5 && windAngle < 337.5) {
-      return "西北风";
+    return "西北风";
   } else {
-      return "";
+    return "";
   }
 }
 
@@ -151,7 +151,7 @@ function updateControl(data) {
 
   donutChart1.setOption({
     series: [{
-      max: 400,
+      max: 300,
       data: [
         {
           value: pm25.toString().slice(0, 6),
@@ -159,7 +159,7 @@ function updateControl(data) {
         }
       ], itemStyle: {
         color: function (params) {
-          var max = 400; // 最大值
+          var max = 300; // 最大值
           var value = params.value;
           var ratio = value / max;
           var r = Math.floor(255 * ratio); // 红色分量从0过渡到255
@@ -204,7 +204,18 @@ function updateControl(data) {
           value: so2.toString().slice(0, 6),
           name: 'SO2'
         }
-      ]
+      ], itemStyle: {
+        color: function (params) {
+          var max = 1200; // 最大值
+          var value = params.value;
+          var ratio = value / max;
+          var r = Math.floor(255 * ratio); // 红色分量从0过渡到255
+          var g = Math.floor(205 * (1 - ratio)); // 绿色分量从255过渡到0
+          var b = Math.floor(0 * (1 - ratio)); // 蓝色分量从204过渡到0
+          console.log(`rgb(${r}, ${g}, ${b})`);
+          return `rgb(${r}, ${g}, ${b})`;
+        }
+      },
     }]
   });
 
@@ -279,22 +290,8 @@ function getData() {
         var row = rows[i].split(",");
         if (row[1] === date) {
           data = []
-
-          // let wind = data[1];
-          // let temperature = data[2];
-          // let humidity = data[3];
-          // let pressure = data[4];
-
-          // let pm25 = data[5];
-          // let pm10 = data[6];
-          // let so2 = data[7];
-          // let no2 = data[8];
-          // let co = data[9];
-          // let o3 = data[10];
-
-          // let name = data[11];
           data.push(row[16]);
-          data.push(calculateWindDirection(row[9],row[10])+Math.sqrt(row[9] * row[9], row[10] * row[10]));
+          data.push(calculateWindDirection(row[9], row[10]) + Math.sqrt(row[9] * row[9], row[10] * row[10]));
           data.push(row[11] - 272.15);
           data.push(row[12]);
           data.push(row[13]);
