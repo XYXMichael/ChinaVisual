@@ -1,14 +1,52 @@
 // 初始化Echarts实例
 var myChart = echarts.init(document.getElementById("box2"));
 var province = document.getElementById("province");
-var province_name = "北京"
-var date = '2013-01-01';
+var province_name = "北京";
+var change_button = document.getElementById("change");
+let flag = 1;
+var date = "2013-01-01";
 var data = [];
+const provinceToEnglish = {
+  北京: "beijing",
+  天津: "tianjin",
+  河北: "hebei",
+  山西: "shanxi",
+  内蒙古: "inner mongolia",
+  辽宁: "liaoning",
+  吉林: "jilin",
+  黑龙江: "heilongjiang",
+  上海: "shanghai",
+  江苏: "jiangsu",
+  浙江: "zhejiang",
+  安徽: "anhui",
+  福建: "fujian",
+  江西: "jiangxi",
+  山东: "shandong",
+  河南: "henan",
+  湖北: "hubei",
+  湖南: "hunan",
+  广东: "guangdong",
+  广西: "guangxi",
+  海南: "hainan",
+  重庆: "chongqing",
+  四川: "sichuan",
+  贵州: "guizhou",
+  云南: "yunnan",
+  西藏: "tibet",
+  陕西: "shaanxi",
+  甘肃: "gansu",
+  青海: "qinghai",
+  宁夏: "ningxia",
+  新疆: "xinjiang",
+  香港: "hongkong",
+  澳门: "aomen",
+  台湾: "taiwan",
+};
 var option = {
   series: [
     {
-      type: 'gauge',
-      center: ['50%', '45%'],
+      type: "gauge",
+      center: ["50%", "45%"],
       startAngle: 210,
       endAngle: -30,
       min: 0,
@@ -16,7 +54,7 @@ var option = {
       splitNumber: 12,
       itemStyle: {
         color: function (params) {
-          console.log(params)
+          console.log(params);
           var max = 80; // 最大值
           var value = params.value;
           var ratio = value / max;
@@ -25,7 +63,7 @@ var option = {
           var b = Math.floor(0 * (1 - ratio)); // 蓝色分量从204过渡到0
           console.log(`rgb(${r}, ${g}, ${b})`);
           return `rgb(${r}, ${g}, ${b})`;
-        }
+        },
       },
       progress: {
         show: true,
@@ -33,57 +71,54 @@ var option = {
         roundCap: true,
       },
       pointer: {
-        show: false
+        show: false,
       },
       axisLine: {
         roundCap: true,
         lineStyle: {
           width: 5,
-          cap: 'square',
-          join: 'round'
+          cap: "square",
+          join: "round",
         },
         show: true,
-
       },
       axisTick: {
-        show: false
+        show: false,
       },
       splitLine: {
-        show: false
+        show: false,
       },
       axisLabel: {
-        show: false
+        show: false,
       },
       anchor: {
-        show: false
+        show: false,
       },
       title: {
         show: true,
         fontSize: 8,
-        offsetCenter: [0, '85%'],
-
+        offsetCenter: [0, "85%"],
       },
       detail: {
         valueAnimation: true,
-        width: '60%',
+        width: "60%",
         lineHeight: 40,
         borderRadius: 8,
-        offsetCenter: [0, '-1%'],
+        offsetCenter: [0, "-1%"],
         fontSize: 8,
-        fontWeight: 'bolder',
-        formatter: '{value}',
-        color: 'inherit'
+        fontWeight: "bolder",
+        formatter: "{value}",
+        color: "inherit",
       },
       data: [
         {
           value: 20,
-          name: 'Grade Rating'
-        }
-      ]
-    }
-  ]
+          name: "Grade Rating",
+        },
+      ],
+    },
+  ],
 };
-
 
 let donutChart1 = echarts.init(document.getElementById("donut1"));
 let donutChart2 = echarts.init(document.getElementById("donut2"));
@@ -92,17 +127,17 @@ let donutChart4 = echarts.init(document.getElementById("donut4"));
 let donutChart5 = echarts.init(document.getElementById("donut5"));
 let donutChart6 = echarts.init(document.getElementById("donut6"));
 
-donutChart1.setOption(option)
-donutChart2.setOption(option)
-donutChart3.setOption(option)
-donutChart4.setOption(option)
-donutChart5.setOption(option)
-donutChart6.setOption(option)
+donutChart1.setOption(option);
+donutChart2.setOption(option);
+donutChart3.setOption(option);
+donutChart4.setOption(option);
+donutChart5.setOption(option);
+donutChart6.setOption(option);
 
 function calculateWindDirection(u, v) {
   var windAngle = Math.atan2(u, v) * (180 / Math.PI);
   windAngle = (windAngle + 360) % 360; // 转换为0-360度范围内的角度
-  console.log(u)
+  console.log(u);
   // 返回风向的字符串描述
   if (windAngle >= 337.5 || windAngle < 22.5) {
     return "北风";
@@ -125,7 +160,6 @@ function calculateWindDirection(u, v) {
   }
 }
 
-
 function updateControl(data) {
   let aqi = data[0];
   let wind = data[1];
@@ -143,139 +177,159 @@ function updateControl(data) {
   let name = data[11];
 
   province.textContent = name;
-  document.getElementById("aqi").textContent = "AQI " + aqi.toString().slice(0, 6);
-  document.getElementById("wind").textContent = wind.toString().slice(0, 6) + "m/s";
-  document.getElementById("temperature").textContent = temperature.toString().slice(0, 5) + " ℃";
-  document.getElementById("humidity").textContent = humidity.toString().slice(0, 6) + " %";
-  document.getElementById("pressure").textContent = pressure.toString().slice(0, 5) + " Pa";
+  document.getElementById("aqi").textContent =
+    "AQI " + aqi.toString().slice(0, 6);
+  document.getElementById("wind").textContent =
+    wind.toString().slice(0, 6) + "m/s";
+  document.getElementById("temperature").textContent =
+    temperature.toString().slice(0, 5) + " ℃";
+  document.getElementById("humidity").textContent =
+    humidity.toString().slice(0, 6) + " %";
+  document.getElementById("pressure").textContent =
+    pressure.toString().slice(0, 5) + " Pa";
 
   donutChart1.setOption({
-    series: [{
-      max: 300,
-      data: [
-        {
-          value: pm25.toString().slice(0, 6),
-          name: 'PM2.5'
-        }
-      ], itemStyle: {
-        color: function (params) {
-          var max = 300; // 最大值
-          var value = params.value;
-          var ratio = value / max;
-          var r = Math.floor(255 * ratio); // 红色分量从0过渡到255
-          var g = Math.floor(205 * (1 - ratio)); // 绿色分量从255过渡到0
-          var b = Math.floor(0 * (1 - ratio)); // 蓝色分量从204过渡到0
-          console.log(`rgb(${r}, ${g}, ${b})`);
-          return `rgb(${r}, ${g}, ${b})`;
-        }
+    series: [
+      {
+        max: 300,
+        data: [
+          {
+            value: pm25.toString().slice(0, 6),
+            name: "PM2.5",
+          },
+        ],
+        itemStyle: {
+          color: function (params) {
+            var max = 300; // 最大值
+            var value = params.value;
+            var ratio = value / max;
+            var r = Math.floor(255 * ratio); // 红色分量从0过渡到255
+            var g = Math.floor(205 * (1 - ratio)); // 绿色分量从255过渡到0
+            var b = Math.floor(0 * (1 - ratio)); // 蓝色分量从204过渡到0
+            console.log(`rgb(${r}, ${g}, ${b})`);
+            return `rgb(${r}, ${g}, ${b})`;
+          },
+        },
       },
-    }]
+    ],
   });
 
   donutChart2.setOption({
-    series: [{
-      max: 300,
-      data: [
-        {
-          value: pm10.toString().slice(0, 6),
-          name: 'PM10'
-        }
-      ],
-      itemStyle: {
-        color: function (params) {
-          var max = 300; // 最大值
-          var value = params.value;
-          var ratio = value / max;
-          var r = Math.floor(255 * ratio); // 红色分量从0过渡到255
-          var g = Math.floor(205 * (1 - ratio)); // 绿色分量从255过渡到0
-          var b = Math.floor(0 * (1 - ratio)); // 蓝色分量从204过渡到0
-          console.log(`rgb(${r}, ${g}, ${b})`);
-          return `rgb(${r}, ${g}, ${b})`;
-        }
+    series: [
+      {
+        max: 300,
+        data: [
+          {
+            value: pm10.toString().slice(0, 6),
+            name: "PM10",
+          },
+        ],
+        itemStyle: {
+          color: function (params) {
+            var max = 300; // 最大值
+            var value = params.value;
+            var ratio = value / max;
+            var r = Math.floor(255 * ratio); // 红色分量从0过渡到255
+            var g = Math.floor(205 * (1 - ratio)); // 绿色分量从255过渡到0
+            var b = Math.floor(0 * (1 - ratio)); // 蓝色分量从204过渡到0
+            console.log(`rgb(${r}, ${g}, ${b})`);
+            return `rgb(${r}, ${g}, ${b})`;
+          },
+        },
       },
-    }]
+    ],
   });
 
   donutChart3.setOption({
-    series: [{
-      max: 1200,
-      data: [
-        {
-          value: so2.toString().slice(0, 6),
-          name: 'SO2'
-        }
-      ], itemStyle: {
-        color: function (params) {
-          var max = 1200; // 最大值
-          var value = params.value;
-          var ratio = value / max;
-          var r = Math.floor(255 * ratio); // 红色分量从0过渡到255
-          var g = Math.floor(205 * (1 - ratio)); // 绿色分量从255过渡到0
-          var b = Math.floor(0 * (1 - ratio)); // 蓝色分量从204过渡到0
-          console.log(`rgb(${r}, ${g}, ${b})`);
-          return `rgb(${r}, ${g}, ${b})`;
-        }
+    series: [
+      {
+        max: 1200,
+        data: [
+          {
+            value: so2.toString().slice(0, 6),
+            name: "SO2",
+          },
+        ],
+        itemStyle: {
+          color: function (params) {
+            var max = 1200; // 最大值
+            var value = params.value;
+            var ratio = value / max;
+            var r = Math.floor(255 * ratio); // 红色分量从0过渡到255
+            var g = Math.floor(205 * (1 - ratio)); // 绿色分量从255过渡到0
+            var b = Math.floor(0 * (1 - ratio)); // 蓝色分量从204过渡到0
+            console.log(`rgb(${r}, ${g}, ${b})`);
+            return `rgb(${r}, ${g}, ${b})`;
+          },
+        },
       },
-    }]
+    ],
   });
 
   donutChart4.setOption({
-    series: [{
-      max: 470,
-      data: [
-        {
-          value: no2.toString().slice(0, 6),
-          name: 'NO2'
-        }
-      ],
-      itemStyle: {
-        color: function (params) {
-          var max = 470; // 最大值
-          var value = params.value;
-          var ratio = value / max;
-          var r = Math.floor(255 * ratio); // 红色分量从0过渡到255
-          var g = Math.floor(205 * (1 - ratio)); // 绿色分量从255过渡到0
-          var b = Math.floor(0 * (1 - ratio)); // 蓝色分量从204过渡到0
-          console.log(`rgb(${r}, ${g}, ${b})`);
-          return `rgb(${r}, ${g}, ${b})`;
-        }
+    series: [
+      {
+        max: 470,
+        data: [
+          {
+            value: no2.toString().slice(0, 6),
+            name: "NO2",
+          },
+        ],
+        itemStyle: {
+          color: function (params) {
+            var max = 470; // 最大值
+            var value = params.value;
+            var ratio = value / max;
+            var r = Math.floor(255 * ratio); // 红色分量从0过渡到255
+            var g = Math.floor(205 * (1 - ratio)); // 绿色分量从255过渡到0
+            var b = Math.floor(0 * (1 - ratio)); // 蓝色分量从204过渡到0
+            console.log(`rgb(${r}, ${g}, ${b})`);
+            return `rgb(${r}, ${g}, ${b})`;
+          },
+        },
       },
-    }]
+    ],
   });
 
   donutChart5.setOption({
-    series: [{
-      max: 30,
-      data: [
-        {
-          value: co.toString().slice(0, 6),
-          name: 'CO'
-        }
-      ]
-    }]
+    series: [
+      {
+        max: 30,
+        data: [
+          {
+            value: co.toString().slice(0, 6),
+            name: "CO",
+          },
+        ],
+      },
+    ],
   });
 
   donutChart6.setOption({
-    series: [{
-      max: 400,
-      data: [
-        {
-          value: o3.toString().slice(0, 6),
-          name: 'O3'
-        }
-      ], itemStyle: {
-        color: function (params) {
-          var max = 400; // 最大值
-          var value = params.value;
-          var ratio = value / max;
-          var r = Math.floor(255 * ratio); // 红色分量从0过渡到255
-          var g = Math.floor(205 * (1 - ratio)); // 绿色分量从255过渡到0
-          var b = Math.floor(0 * (1 - ratio)); // 蓝色分量从204过渡到0
-          console.log(`rgb(${r}, ${g}, ${b})`);
-          return `rgb(${r}, ${g}, ${b})`;
-        }
+    series: [
+      {
+        max: 400,
+        data: [
+          {
+            value: o3.toString().slice(0, 6),
+            name: "O3",
+          },
+        ],
+        itemStyle: {
+          color: function (params) {
+            var max = 400; // 最大值
+            var value = params.value;
+            var ratio = value / max;
+            var r = Math.floor(255 * ratio); // 红色分量从0过渡到255
+            var g = Math.floor(205 * (1 - ratio)); // 绿色分量从255过渡到0
+            var b = Math.floor(0 * (1 - ratio)); // 蓝色分量从204过渡到0
+            console.log(`rgb(${r}, ${g}, ${b})`);
+            return `rgb(${r}, ${g}, ${b})`;
+          },
+        },
       },
-    }]
+    ],
   });
 }
 
@@ -289,9 +343,12 @@ function getData() {
       for (var i = 1; i < rows.length; i++) {
         var row = rows[i].split(",");
         if (row[1] === date) {
-          data = []
+          data = [];
           data.push(row[16]);
-          data.push(calculateWindDirection(row[9], row[10]) + Math.sqrt(row[9] * row[9], row[10] * row[10]));
+          data.push(
+            calculateWindDirection(row[9], row[10]) +
+              Math.sqrt(row[9] * row[9], row[10] * row[10])
+          );
           data.push(row[11] - 272.15);
           data.push(row[12]);
           data.push(row[13]);
@@ -303,20 +360,19 @@ function getData() {
           data.push(row[8]);
           data.push(province_name);
 
-          updateControl(data)
+          updateControl(data);
           break;
         }
       }
     });
-};
+}
 
 document.getElementById("date_title").addEventListener("change", function () {
   date = document.getElementById("date_title").children[0].value;
   getData();
 });
 
-
-getData()
+getData();
 
 // 加载地图数据
 myChart.showLoading(); // 显示加载动画
@@ -348,36 +404,66 @@ fetch("china.json")
     });
   });
 
-
 myChart.on("click", function (item) {
-  province_name = item.name
-  getData()
-  // console.log(data)
-  // updateControl(data)
+  flag = 0;
+  province_name = item.name;
+  console.log(item.name);
+  getData();
+  fetch(`province_map/${province_name}.json`)
+    .then(function (res) {
+      return res.json();
+    })
+    .then(function (provinceGeoJson) {
+      console.log(provinceToEnglish[province_name]);
+      // 绘制地图
+      echarts.registerMap(provinceToEnglish[province_name], provinceGeoJson); // 注册地图数据
+      myChart.setOption({
+        series: [
+          {
+            type: "map",
+            map: provinceToEnglish[province_name], // 使用注册的地图数据
+            roam: true, // 允许缩放和平移漫游
+            // 设置缩放的比例
+            zoom: 1.2,
+            // 设置缩放的限制
+            scaleLimit: {
+              min: 1,
+              max: 10,
+            },
+          },
+        ],
+      });
+    });
 });
+change_button.addEventListener("click", function () {
+  if (flag == 0) {
+    flag = 1;
+    fetch("china.json")
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (chinaGeoJson) {
+        // 隐藏加载动画
+        myChart.hideLoading();
 
-/**
- * 将csv文件里面的内容转换为对象数组
- * @param {*} Content
- */
-function convert(Content, index) {
-  var dataCollection = [];
-  var rows = Content.split("\n");
-
-  // 遍历每一行并解析数据
-  for (var i = 1; i < rows.length; i++) {
-    var row = rows[i].split(",");
-    var date = row[1]; // 日期列的索引为1
-    var pm25 = parseFloat(row[index]); // PM2.5列的索引为3
-
-    // 创建一个对象来存储日期和PM2.5数据
-    var dataEntry = {
-      date: date,
-      pm25: pm25,
-    };
-
-    // 将数据对象添加到集合中
-    dataCollection.push(dataEntry);
+        // 绘制地图
+        echarts.registerMap("china", chinaGeoJson); // 注册地图数据
+        myChart.setOption({
+          series: [
+            {
+              type: "map",
+              map: "china", // 使用注册的地图数据
+              roam: true, // 允许缩放和平移漫游
+              // 设置缩放的比例
+              zoom: 1.2,
+              // 设置缩放的限制
+              scaleLimit: {
+                min: 1,
+                max: 10,
+              },
+            },
+          ],
+        });
+      });
   }
-  return dataCollection;
-}
+});
