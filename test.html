@@ -5,7 +5,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="./test.css" />
+  <link href="leaflet/leaflet.css" rel="stylesheet">
+  <script src="leaflet/leaflet.js"></script>
   <script src="echarts.min.js"></script>
+  <script src="leaflet/heatmap.min.js"></script>
+		<script src="leaflet/leaflet-heatmap.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css" type="text/css">
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
 
   <title>Document</title>
 </head>
@@ -128,7 +134,6 @@
   </div>
 </body>
 <script>
-  console.log(document.getElementById("box1"))
   document.addEventListener("DOMContentLoaded", () => {
     let dragged = null;
 
@@ -212,7 +217,9 @@
       });
     });
   });
+  
 </script>
 <script src="chinamap.js"></script>
-
+<script src="windmap.js"></script>
+<script src="temperature.js"></script>
 </html>
