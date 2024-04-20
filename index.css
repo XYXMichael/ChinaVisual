@@ -42,6 +42,8 @@ body {
     flex-direction: column;
     margin: 0;
     height: 100%;
+    overflow-y: hidden;
+
 }
 
 .cell {
@@ -51,7 +53,7 @@ body {
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-
+    /* 限制子元素的高度为 100px */
 }
 
 #cell1 {
@@ -61,11 +63,20 @@ body {
     grid-row-end: 3;
 }
 
+#heatmap {
+    max-height: max-content;
+    overflow-y: auto;
+
+}
+
 #cell2 {
     grid-column-start: 3;
     grid-column-end: 4;
     grid-row-start: 1;
     grid-row-end: 3;
+    max-height: 1000px;
+
+    /* 允许垂直方向滑动 */
 }
 
 #box2 {

@@ -70,7 +70,35 @@ function calculateAverageValuesbyCity(date, city) {
         );
 }
 
-// calculateAverageValuesbyCity("20130105", "深圳市")
+
+async function getAverageData_Province_month(year, type) {
+    const res = await fetch(`province_data_group/${year}.csv`);
+    const csvContent = await res.text();
+    var rows = csvContent.split('\n');
+    var result_1 = {};
+    var columns = rows[0].split(',');
+    var index = 0;
+    for (index = 0; index < columns.length; index++) {
+        if (columns[index] == type)
+            break;
+    }
+    for (var i = 1; i < rows.length - 1; i++) {
+        var row = rows[i];
+        var columns = row.split(',');
+        var province = columns[0];
+        var need_col = parseFloat(columns[index]);
+        if (!result_1[province]) {
+            result_1[province] = [];
+        }
+        result_1[province].push(need_col);
+    }
+    const dataArray = [];
+    Object.keys(result_1).forEach(key => {
+        dataArray.push({ name: key, value: result_1[key] });
+    });
+
+    return dataArray
+}
 
 
 function getAllData_city(date, city) {

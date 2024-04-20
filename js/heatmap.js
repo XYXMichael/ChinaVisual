@@ -1,7 +1,6 @@
 // 基于准备好的dom，初始化echarts实例
-var heatmapChart = echarts.init(document.getElementById('heatmap'));
 
-// 指定图表的配置项和数据（热力图）
+
 var heatmapOption = {
     title: {
         text: '热力图示例',
@@ -9,14 +8,12 @@ var heatmapOption = {
     },
     grid: [{
         width: '55%',
-        height: '55%vh',
         top: '40',
         left: '1%'
     }, {
         width: '20%',
-        height: '90',
         top: '40',
-        left: '65%'
+        left: '63%'
     }
     ],
     xAxis: [{
@@ -31,7 +28,8 @@ var heatmapOption = {
             show: false
         },
         axisLabel: {
-            interval: 0
+            interval: 0,
+            fontSize: '1rem'
         }
     },
     {
@@ -63,21 +61,22 @@ var heatmapOption = {
         axisTick: false,
         axisLine: {
             show: false
+        },
+        axisLabel: {
+            fontSize: '1rem',
+            align: 'center'
         }
-    }],
-
-    series: [{
+    }], series: [{
         type: 'custom',
-        data: [[1, 2, 3, 4, 5, 6, 7, 10, 1, 2, 3, 1, 11], [12, 12, 32, 12, 312, 3, 23, 2, 1, 1, 12, 12]],
+        data: [],
         renderItem: function (params, api) {
-            // console.log(params)
             var group = []
             for (i = 0; i < 12; i++) {
                 var categoryIndex = api.value(i);
                 // console.log(categoryIndex)
                 // 这里使用 api.coord(...) 将数值在当前坐标系中转换成为屏幕上的点的像素值。
-                var startPoint = api.coord([i, 2 - params.dataIndex]);
-                var endPoint = api.coord([i + 1, 2 - params.dataIndex]);
+                var startPoint = api.coord([i, params.dataIndex]);
+                var endPoint = api.coord([i + 1, params.dataIndex]);
 
                 var height = api.size([0, 1])[1];
                 var width = api.size([0, 1])[0];
@@ -141,24 +140,50 @@ var heatmapOption = {
 };
 
 
-
 window.onload = function () {
     var parentWidth = document.getElementById('heatmap').offsetWidth;
     var parentHeight = document.getElementById('heatmap').offsetHeight;
-    console.log(parentHeight)
+    getAverageData_Province_month(2013, 'PM2.5').then((result) => {
 
-    heatmapOption.grid = [{
-        width: 0.55 * parentWidth,
-        height: '55%vh',
-        top: '40',
-        left: '1%'
-    }, {
-        width: '20%',
-        height: '90',
-        top: '40',
-        left: '65%'
-    }
-    ]
+        console.log(result)
+        const names = result.map(item => item.name);
+        console.log(names);
+        var height_one = 0.55 * parentWidth / 12 * names.length
+        var heatmapChart = echarts.init(document.getElementById('heatmap'), null, {
+            height: height_one + 100
+        });
+        heatmapChart.setOption(heatmapOption);
 
-    heatmapChart.setOption(heatmapOption);
+        heatmapChart.setOption({
+            series: {
+                data: result
+            }, yAxis: [{
+                type: 'category',
+                data: names,
+                splitArea: {
+                    show: false
+                },
+                show: false,
+                axisLine: {
+                    show: false
+                }
+            }, {
+                gridIndex: 1,
+                type: 'category',
+                data: names,
+                splitArea: {
+                    show: false
+                },
+                axisTick: false,
+                axisLine: {
+                    show: false
+                }
+            }], grid: [{
+                height: height_one,
+            }, {
+                height: height_one,
+            }
+            ]
+        })
+    })
 }
