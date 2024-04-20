@@ -104,7 +104,7 @@ var option = {
         lineHeight: 40,
         borderRadius: 8,
         offsetCenter: [0, "-1%"],
-        fontSize: '0.9rem',
+        fontSize: "0.9rem",
         fontWeight: "bolder",
         formatter: "{value}",
         color: "inherit",
