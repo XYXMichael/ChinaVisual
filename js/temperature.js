@@ -198,8 +198,9 @@ function drawMap(attr, date) {
           return res.json();
         })
         .then(function (provinceGeoJson) {
-          // console.log(provinceToEnglish[province_name]);
+          console.log(province_name);
           // 绘制地图
+		  setControllor("2013-01-01",province_name);
           echarts.registerMap(
             provinceToEnglish[province_name],
             provinceGeoJson
