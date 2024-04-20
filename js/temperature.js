@@ -1,44 +1,65 @@
-// 初始化地图
-var map = new ol.Map({
-	target: 'box3',
-	layers: [
-	  new ol.layer.Tile({
-		source: new ol.source.OSM()
-	  })
+var tempData = [];
+var tempMap = echarts.init(document.getElementById("box2"));
+// 使用 Promise.all 等待所有数据加载完成
+Promise.all([
+  fetch("exampledata.csv").then((response) => response.text()),
+  fetch("china.json").then((response) => response.json()),
+]).then(([csvData, chinaGeoJson]) => {
+  var rows = csvData.split("\n");
+  for (var i = 1; i < rows.length; i++) {
+    var row = rows[i].split(",");
+    tempData.push([
+      parseFloat(row[12]), // longitude
+      parseFloat(row[11]), // latitude
+      parseFloat(row[8])-273.15, // temperature
+    ]);
+  }
+  console.log(tempData)
+  // 绘制地图
+  echarts.registerMap("china", chinaGeoJson); // 注册地图数据
+  var option = {
+	innerWidth: 100, // 调整热力图大小
+	innerHeight: 100,
+    backgroundColor: "#404a59",
+	title: {
+	  text: "温度热力图",
+	  left: "center",
+	},
+	geo: {
+	  map: "china",
+	  label: {
+		show: false,
+		color: '#4a4a4a' // 调整省份标签的颜色
+	  },
+	  itemStyle: {
+		borderColor: '#fff', // 边界线条颜色
+		borderWidth: 1 // 边界线条宽度
+	  }
+	},
+	tooltip: {
+	  trigger: 'item',
+	  formatter: '{b}<br/>温度: {c} °C'
+	},
+	visualMap: {
+	  min: -50,
+	  max: 50,
+	  calculable: true,
+	  orient: "vertical",
+	  left: "left",
+	  top: "bottom",
+	  inRange: {
+		color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+	  },
+	},
+	series: [
+	  {
+		type: "heatmap",
+		coordinateSystem: "geo",
+		data: tempData,
+		pointSize: 1,
+          blurSize: 4
+	  },
 	],
-	view: new ol.View({
-	  center: ol.proj.fromLonLat([108.55, 34.32]), // 海南省的大致中心点
-	  zoom: 3
-	})
-  });
-
-  // 准备热力图数据
-  var features = [];
-  var csvData = "exampledata.csv"; // 这里应该是从文件读取的数据
-  fetch(csvData).then((response) => response.text())
-	.then((data) => {
-	  var lines = data.split('\n');
-	  lines.forEach(function(line) {
-		var parts = line.split(',');
-		  var lon = parseFloat(parts[12]);
-		  var lat = parseFloat(parts[11]);
-		  var value = parseFloat(parts[8]-273.3); 
-		  var feature = new ol.Feature({
-			geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat])),
-			weight: value // 热力图的权重
-		  });
-		  features.push(feature);
-	  });
-	  // 创建热力图图层
-	  var heatMapLayer = new ol.layer.Heatmap({
-		source: new ol.source.Vector({
-		  features: features
-		}),
-		blur: 5,
-		radius: 5,
-		gradient: ['#0000ff', '#0044ff', '#0088ff', '#00ccff', '#00ffff', '#00ffcc', '#00ff88', '#00ff44', '#00ff00', '#44ff00', '#88ff00', '#ccff00', '#ffff00', '#ffcc00', '#ff8800', '#ff4400', '#ff0000']
-	  });
-
-	  // 将热力图图层添加到地图上
-	  map.addLayer(heatMapLayer);
-	});
+  };
+  tempMap.setOption(option);
+});
