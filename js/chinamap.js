@@ -104,7 +104,7 @@ var option = {
         lineHeight: 40,
         borderRadius: 8,
         offsetCenter: [0, "-1%"],
-        fontSize: 8,
+        fontSize: '0.9rem',
         fontWeight: "bolder",
         formatter: "{value}",
         color: "inherit",
@@ -318,7 +318,7 @@ function updateControl(data) {
             var r = Math.floor(255 * ratio); // 红色分量从0过渡到255
             var g = Math.floor(205 * (1 - ratio)); // 绿色分量从255过渡到0
             var b = Math.floor(0 * (1 - ratio)); // 蓝色分量从204过渡到0
-  
+
             return `rgb(${r}, ${g}, ${b})`;
           },
         },

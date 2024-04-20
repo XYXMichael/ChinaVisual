@@ -70,7 +70,7 @@ function calculateAverageValuesbyCity(date, city) {
         );
 }
 
-calculateAverageValuesbyCity("20130105", "深圳市")
+// calculateAverageValuesbyCity("20130105", "深圳市")
 
 
 function getAllData_city(date, city) {
