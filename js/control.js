@@ -1,4 +1,12 @@
 var date = "2013-01-01";
+// 初始化Echarts实例
+var myChart = echarts.init(document.getElementById("box2"));
+var province = document.getElementById("province");
+var province_name = "北京";
+
+var data = [];
+
+
 // 从缩写到大写
 const provinceSimp2All = {
     "安徽": "安徽省",
@@ -98,7 +106,7 @@ var option = {
             },
             title: {
                 show: true,
-                // fontSize: 8,
+                fontSize: 10,
                 offsetCenter: [0, "85%"],
             },
             detail: {

@@ -7,9 +7,9 @@ var heatmapOption = {
         top: '40',
         left: '1%'
     }, {
-        width: '20%',
+        width: '25%',
         top: '40',
-        left: '64%'
+        left: '66%'
     }
     ],
     xAxis: [{
@@ -25,7 +25,7 @@ var heatmapOption = {
         },
         axisLabel: {
             interval: 0,
-            fontSize: '1rem'
+            fontSize: '0.8rem'
         }
     },
     {
