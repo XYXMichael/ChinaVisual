@@ -1,9 +1,5 @@
-// 基于准备好的dom，初始化echarts实例
-
-
 var heatmapOption = {
     title: {
-        text: '热力图示例',
         show: false
     },
     grid: [{
@@ -43,7 +39,7 @@ var heatmapOption = {
     ],
     yAxis: [{
         type: 'category',
-        data: ['浙江省', '河北省', '山东省'],
+        data: ['浙江省'],
         splitArea: {
             show: false
         },
@@ -54,7 +50,7 @@ var heatmapOption = {
     }, {
         gridIndex: 1,
         type: 'category',
-        data: ['浙江省', '河北省', '山东省'],
+        data: ['浙江省'],
         splitArea: {
             show: false
         },
@@ -73,7 +69,6 @@ var heatmapOption = {
             var group = []
             for (i = 0; i < 12; i++) {
                 var categoryIndex = api.value(i);
-                console.log(categoryIndex)
                 // 这里使用 api.coord(...) 将数值在当前坐标系中转换成为屏幕上的点的像素值。
                 var startPoint = api.coord([i, params.dataIndex]);
                 var endPoint = api.coord([i + 1, params.dataIndex]);
@@ -103,18 +98,14 @@ var heatmapOption = {
                 type: 'group',
                 children: group
             };
-        }}]
+        }
+    }]
 };
 
-
-window.onload = function () {
-    var parentWidth = document.getElementById('heatmap').offsetWidth;
-    var parentHeight = document.getElementById('heatmap').offsetHeight;
-    getAverageData_Province_month(2013, 'PM2.5').then((result) => {
-
-        console.log(result)
+function setHotMap(year, type) {
+    getAverageData_Province_month(year, type).then((result) => {
+        var parentWidth = document.getElementById('heatmap').offsetWidth;
         const names = result.map(item => item.name);
-        console.log(names);
         var height_one = 0.55 * parentWidth / 12 * names.length
         var heatmapChart = echarts.init(document.getElementById('heatmap'), null, {
             height: height_one + 100
@@ -153,9 +144,6 @@ window.onload = function () {
             ]
         })
     })
-
-    var maxHeight = document.getElementById('cell1').offsetHeight;
-    console.log(maxHeight + "px")
-    document.getElementById('cell2').style.maxHeight = maxHeight + "px";
-
 }
+
+
