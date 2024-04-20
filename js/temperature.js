@@ -1,3 +1,4 @@
+
 var tempData = [];
 let flag = 1;
 var chinaMap = echarts.init(document.getElementById("box2"));

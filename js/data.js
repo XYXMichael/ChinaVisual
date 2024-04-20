@@ -1,5 +1,5 @@
 function calculateAverageValues(date, province) {
-    fetch(`dataset2/CN-Reanalysis-daily-${date}00.csv`)
+    fetch(`dataset/CN-Reanalysis-daily-${date}00.csv`)
         .then(function (res) {
             return res.text();
         })
@@ -35,7 +35,7 @@ function calculateAverageValues(date, province) {
 }
 
 function calculateAverageValuesbyCity(date, city) {
-    fetch(`dataset2/CN-Reanalysis-daily-${date}00.csv`)
+    fetch(`dataset/CN-Reanalysis-daily-${date}00.csv`)
         .then(function (res) {
             return res.text();
         })
@@ -100,14 +100,28 @@ async function getAverageData_Province_month(year, type) {
     return dataArray
 }
 
-
-function getAllData_city(date, city) {
-
-
-    return data;
+/**
+ * 获取某一天某个省份的平均数据
+ * @param {*} date 日期
+ * @param {*} province 省
+ * @returns 
+ */
+async function getAverageData_Province_day(date, province) {
+    const res = await fetch(`province_data_group/${province}/${province}.csv`);
+    const csvContent = await res.text();
+    var rows = csvContent.split('\n');
+    var columns = rows[0].split(',');
+    for (var i = 1; i < rows.length - 1; i++) {
+        var row = rows[i];
+        var columns = row.split(',');
+        if (columns[1] === date) {
+            console.log(columns)
+            return columns
+        }
+    }
 }
 
-
+getAverageData_Province_day("2013-01-01", "上海市")
 
 /**
  * 返回一项数据的经纬度、值，用于绘图

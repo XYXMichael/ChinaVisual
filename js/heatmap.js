@@ -1,9 +1,5 @@
-// 基于准备好的dom，初始化echarts实例
-
-
 var heatmapOption = {
     title: {
-        text: '热力图示例',
         show: false
     },
     grid: [{
@@ -13,7 +9,7 @@ var heatmapOption = {
     }, {
         width: '20%',
         top: '40',
-        left: '63%'
+        left: '64%'
     }
     ],
     xAxis: [{
@@ -43,7 +39,7 @@ var heatmapOption = {
     ],
     yAxis: [{
         type: 'category',
-        data: ['浙江省', '河北省', '山东省'],
+        data: ['浙江省'],
         splitArea: {
             show: false
         },
@@ -54,7 +50,7 @@ var heatmapOption = {
     }, {
         gridIndex: 1,
         type: 'category',
-        data: ['浙江省', '河北省', '山东省'],
+        data: ['浙江省'],
         splitArea: {
             show: false
         },
@@ -73,7 +69,6 @@ var heatmapOption = {
             var group = []
             for (i = 0; i < 12; i++) {
                 var categoryIndex = api.value(i);
-                // console.log(categoryIndex)
                 // 这里使用 api.coord(...) 将数值在当前坐标系中转换成为屏幕上的点的像素值。
                 var startPoint = api.coord([i, params.dataIndex]);
                 var endPoint = api.coord([i + 1, params.dataIndex]);
@@ -81,56 +76,24 @@ var heatmapOption = {
                 var height = api.size([0, 1])[1];
                 var width = api.size([0, 1])[0];
 
-                group.push({
-                    type: 'line',
-                    rotation: Math.PI / 2,
-                    originX: startPoint[0],
-                    originY: startPoint[1],
-                    shape: {
-
-                        x1: startPoint[0],
-                        y1: startPoint[1],
-                        x2: startPoint[0] + (width / 2 - 2),
-                        y2: startPoint[1],
-                    },
-                }, {
-                    type: 'line',
-                    rotation: Math.PI,
-                    originX: startPoint[0],
-                    originY: startPoint[1],
-                    shape: {
-
-                        x1: startPoint[0],
-                        y1: startPoint[1],
-                        x2: startPoint[0] + (width / 2 - 2),
-                        y2: startPoint[1],
-                    },
-                }, {
-                    type: 'line',
-                    rotation: Math.PI * 3 / 2,
-                    originX: startPoint[0],
-                    originY: startPoint[1],
-                    shape: {
-
-                        x1: startPoint[0],
-                        y1: startPoint[1],
-                        x2: startPoint[0] + (width / 2 - 2),
-                        y2: startPoint[1],
-                    },
-                }, {
-                    type: 'line',
-                    rotation: Math.PI * 2,
-                    originX: startPoint[0],
-                    originY: startPoint[1],
-                    shape: {
-
-                        x1: startPoint[0],
-                        y1: startPoint[1],
-                        x2: startPoint[0] + (width / 2 - 2),
-                        y2: startPoint[1],
-                    },
-                })
+                var kk = parseInt(categoryIndex / 8) + 5
+                for (j = 0; j < kk; j++) {
+                    group.push({
+                        type: 'line',
+                        rotation: 2 * j * Math.PI / kk,
+                        originX: startPoint[0],
+                        originY: startPoint[1],
+                        shape: {
+                            x1: startPoint[0],
+                            y1: startPoint[1],
+                            x2: startPoint[0] + (width / 2 - 2),
+                            y2: startPoint[1],
+                        },
+                    }
+                    )
+                }
             }
+
             return {
                 type: 'group',
                 children: group
@@ -139,15 +102,10 @@ var heatmapOption = {
     }]
 };
 
-
-window.onload = function () {
-    var parentWidth = document.getElementById('heatmap').offsetWidth;
-    var parentHeight = document.getElementById('heatmap').offsetHeight;
-    getAverageData_Province_month(2013, 'PM2.5').then((result) => {
-
-        console.log(result)
+function setHotMap(year, type) {
+    getAverageData_Province_month(year, type).then((result) => {
+        var parentWidth = document.getElementById('heatmap').offsetWidth;
         const names = result.map(item => item.name);
-        console.log(names);
         var height_one = 0.55 * parentWidth / 12 * names.length
         var heatmapChart = echarts.init(document.getElementById('heatmap'), null, {
             height: height_one + 100
@@ -187,3 +145,5 @@ window.onload = function () {
         })
     })
 }
+
+
