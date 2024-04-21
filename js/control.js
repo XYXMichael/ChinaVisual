@@ -49,8 +49,11 @@ const provinceSimp2All = {
 // 日期修改
 document.getElementById("date_title").addEventListener("change", function () {
     date = document.getElementById("date_title").children[0].value;
-    console.log(province_name)
     setControllor(date, province_name)
+    // setBarChart(date).then(() => {
+    //     setHotMap(date, 'AQI');
+    // });
+    setTogether(date,"AQI")
 });
 
 // 设置圆环图配置

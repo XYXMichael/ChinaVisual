@@ -10,9 +10,11 @@ var standardValue = {
 }
 // 地图变量
 var heatmapChart
+// y轴排序
 var sortedKeys
 var parentWidth = document.getElementById('heatmap').offsetWidth;
 var height_one = 0.55 * parentWidth / 12 * 33
+
 
 function getValueColor(value, minValue, maxValue) {
     // 将值从给定范围归一化到 0 到 1 之间
@@ -70,7 +72,41 @@ var heatmapOption = {
     ],
     yAxis: [{
         type: 'category',
-        data: ['浙江省'],
+        data: [
+            "内蒙古自治区",
+            "台湾省",
+            "宁夏回族自治区",
+            "甘肃省",
+            "新疆维吾尔自治区",
+            "云南省",
+            "青海省",
+            "西藏自治区",
+            "陕西省",
+            "北京市",
+            "福建省",
+            "海南省",
+            "辽宁省",
+            "黑龙江省",
+            "山西省",
+            "广东省",
+            "四川省",
+            "香港特别行政区",
+            "广西壮族自治区",
+            "浙江省",
+            "吉林省",
+            "江西省",
+            "河北省",
+            "贵州省",
+            "湖南省",
+            "湖北省",
+            "重庆市",
+            "安徽省",
+            "江苏省",
+            "河南省",
+            "上海市",
+            "天津市",
+            "山东省"
+        ],
         splitArea: {
             show: false
         },
@@ -84,7 +120,41 @@ var heatmapOption = {
     }, {
         gridIndex: 1,
         type: 'category',
-        data: ['浙江省'],
+        data: [
+            "内蒙古自治区",
+            "台湾省",
+            "宁夏回族自治区",
+            "甘肃省",
+            "新疆维吾尔自治区",
+            "云南省",
+            "青海省",
+            "西藏自治区",
+            "陕西省",
+            "北京市",
+            "福建省",
+            "海南省",
+            "辽宁省",
+            "黑龙江省",
+            "山西省",
+            "广东省",
+            "四川省",
+            "香港特别行政区",
+            "广西壮族自治区",
+            "浙江省",
+            "吉林省",
+            "江西省",
+            "河北省",
+            "贵州省",
+            "湖南省",
+            "湖北省",
+            "重庆市",
+            "安徽省",
+            "江苏省",
+            "河南省",
+            "上海市",
+            "天津市",
+            "山东省"
+        ],
         splitArea: {
             show: false
         },
@@ -134,29 +204,20 @@ var heatmapOption = {
                         }, enterFrom: {
                             style: { opacity: 0 },
                         }, updateAnimation: {
-                            duration: 3000,
-                            easing: 'elasticOut',
-                            delay: 500
+                            duration: 500,
+                            easing: 'quarticIn',
+                            // delay: 200
                         },
                         animation: {
-                            duration: 2000,
-                            easing: 'elasticOut',
-                        }, leaveAnimation: {
-                            duration: 2000,
-                            easing: 'elasticOut',
-                            delay: 0
+                            duration: 1000,
+                            easing: 'quarticIn',
                         },
                         transition: 'all',
                     }
                     )
                 }
                 group.push({
-                    type: 'group', children: item, leaveTo: {
-                        // 淡出
-                        style: { opacity: 0 },
-                        // 向右飞出
-                        x: 200
-                    }
+                    type: 'group', children: item
                 })
             }
             return {
@@ -202,10 +263,9 @@ heatmapChart.setOption(heatmapOption);
 
 // 设置地图
 function setHotMap(date, type) {
-
     getAverageData_Province_month(date.slice(0, 4), type).then((result) => {
         standard = standardValue[type]
-        console.log(sortedKeys)
+
         result.sort((a, b) => {
             const nameA = a.name;
             const nameB = b.name;
@@ -221,7 +281,6 @@ function setHotMap(date, type) {
     })
 
 }
-
 
 async function setBarChart(date) {
     await getOneAverageData_province_day(date, "AQI").then((result) => {
@@ -245,4 +304,38 @@ async function setBarChart(date) {
             }]
         });
     })
+}
+
+async function setTogether(date, type) {
+    result1 = await getAverageData_Province_month(date.slice(0, 4), type)
+    result2 = await getOneAverageData_province_day(date, "AQI")
+
+    standard = standardValue[type]
+    const keys = Object.keys(result2);
+    sortedKeys = keys.slice().sort((a, b) => (result2[a]) - (result2[b]));
+    const values = keys.map(key => result2[key]);
+    values.sort((a, b) => a - b);
+
+    result1.sort((a, b) => {
+        const nameA = a.name;
+        const nameB = b.name;
+        if (sortedKeys.indexOf(nameA) < sortedKeys.indexOf(nameB)) return -1;
+        else if (sortedKeys.indexOf(nameA) > sortedKeys.indexOf(nameB)) return 1;
+        return 0;
+    })
+    heatmapChart.setOption({
+        grid: [{
+            height: height_one,
+        }, {
+            height: height_one,
+        }],
+        yAxis: [{
+            data: sortedKeys,
+        }, {
+            data: sortedKeys,
+        }],
+        series: [{data: result1}, {
+            data: values,
+        }]
+    });
 }
