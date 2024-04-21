@@ -1,7 +1,7 @@
 var date = "2013-01-01";
 // 初始化Echarts实例
 var myChart = echarts.init(document.getElementById("box2"));
-var province = document.getElementById("province");
+var province_div = document.getElementById("province");
 var province_name = "北京";
 
 var data = [];
@@ -212,7 +212,7 @@ function updateControl(data) {
     let o3 = data[10];
     let name = data[11];
 
-    province.textContent = name;
+    province_div.textContent = name;
     document.getElementById("aqi").textContent =
         "AQI " + aqi.toString().slice(0, 6);
     document.getElementById("wind").textContent =
@@ -368,7 +368,6 @@ function updateControl(data) {
 function setControllor(date1, province) {
     date = date1
     var province_all = provinceSimp2All[province]
-    console.log(province_all)
     getAverageData_Province_day(date1, province_all).then((row) => {
         data = [];
         data.push(row[13] + " " + row[14]);
@@ -385,7 +384,7 @@ function setControllor(date1, province) {
         data.push(row[5]);
         data.push(row[6]);
         data.push(row[7]);
-        data.push(province_name);
+        data.push(province);
         updateControl(data);
     })
 }
