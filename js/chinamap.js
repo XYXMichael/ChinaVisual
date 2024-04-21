@@ -6,7 +6,7 @@ var temIndex = 0;
 let tempdata = [];
 let temattr = "TEMP";
 let currentDate = "2013-01-01";
-
+let tempro = "上海"
 var option_map = {
   backgroundColor: "#404a59",
   title: {
@@ -31,6 +31,13 @@ var option_map = {
       borderColor: "#0a0a0a", // 边界线条颜色
       borderWidth: 1, // 边界线条宽度
     },
+    zoom: 1.2,
+    scaleLimit:{
+      max:2,
+      min:0.5
+  },
+  roam:true
+
   },
   visualMap: {
     min: 0,
@@ -41,7 +48,10 @@ var option_map = {
     top: "bottom",
     inRange: {
       color: ["#f7fcf0", "#e0f3db", "#ccebc5", "#a8ddb5", "#7bccc4"],
+      colorAlpha:0.9
     },
+    precision:2,
+
   },
   series: [
     {
@@ -49,7 +59,7 @@ var option_map = {
       coordinateSystem: "geo",
       roam: true, // 允许缩放和平移漫游
       // 设置缩放的比例
-      zoom: 1.2,
+      zoom: 2,
       // 设置缩放的限制
       scaleLimit: {
         min: 1,
@@ -58,6 +68,7 @@ var option_map = {
       data: [],
       pointSize: 1,
       blurSize: 4,
+      minOpacity:0.3
     },
   ],
 };
@@ -67,41 +78,43 @@ const option_diff = {
     name: "PM2.5",
     index: 0,
     color: [
-      "#ae00ff",
-      "#a100e9",
-      "#9400d4",
-      "#8700be",
-      "#7a00a9",
-      "#6d0093",
-      "#60007e",
-      "#530068",
-      " #460053",
-      "#39003d",
+      '#ffffff',
+      "#b499d4",
+      "#a766c0",
+      "#7a33b0",
+      "#6000ae",
+      "#400090",
+      "#200070",
+
     ],
-    min: 0,
-    max: 150,
+    min: -2,
+    max: 350,
   },
   "PM10": {
     name: "PM10",
     index: 1,
     color: [
-      "#fff700",
-      "#e9e200",
-      "#d4ce00",
-      "#beb900",
-      "#a8a400",
-      "#939000",
-      "#7d7b00",
-      "#676600",
+      "#ffffff",
+      "#e4dedd",
+      "#dfd795",
+      "#ebde6f",
+      "#fee725",
+      "#fec325",
+      "#fea925",
+      "#fe5825"
+
     ],
-    min: 0,
-    max: 250,
+    min: -10,
+    max: 350,
   },
   "SO2": {
     name: "SO2",
     index: 2,
     color: [
-      "#e0e0e0",
+      "#ffffff",
+      "#f5cce0",
+      "#f0aad0",
+      "#e055b0",
       "#e900a0",
       "#be0085",
       "#7e005b",
@@ -113,37 +126,33 @@ const option_diff = {
     name: "NO2",
     index: 3,
     color: [
-      "#ffa200",
-      "#e99700",
-      "#d28c00",
-      "#bc8000",
-      "#a67500",
+      "#ffffff",
+      "#e9e7da",
+      "#d2aca7",
+      "#bc8055",
+      "#a67522",
       "#8f6a00",
       "#795f00",
       "#635300",
-      "#4c4800",
       "#363d00",
     ],
-    min: 0,
+    min: -1,
     max: 180,
   },
   "CO": {
     name: "CO",
     index: 4,
     color: [
-      "#00fbff",
-      "#12eae3",
+      "#ffffff",
+      "#72faf3",
       "#23d9c6",
       "#35c9aa",
-      "#46b88e",
-      "#58a771",
       "#699655",
-      "#7b8639",
       "#8c751c",
       "#9e6400",
     ],
-    min: 0,
-    max: 8,
+    min: -0.5,
+    max: 16,
   },
   "O3": {
     name: "O3",
@@ -162,33 +171,30 @@ const option_diff = {
   },
   "TEMP": {
     name: "TEMP",
-    index: 8,
+    index: 8 ,
     color: [
       "#313695",
       "#4575b4",
       "#74add1",
       "#abd9e9",
-      "#e0f3f8",
       "#fdae61",
       "#f46d43",
     ],
-    min: 250,
-    max: 300,
+    min: 230,
+    max: 320,
   },
   "RH": {
     name: "RH",
     index: 9,
     color: [
-      "#00b3ff",
-      "#00a2e9",
-      "#0090d4",
-      "#007fbe",
-      "#006ea9",
-      "#005c93",
+      "#aac3ff",
+      "#88b2e9",
+      "#77a0d4",
+      "#558fbe",
+      "#337ea9",
+      "#116c93",
       "#004b7e",
       "#003a68",
-      "#002853",
-      "#00173d",
     ],
     min: 0,
     max: 100,
@@ -197,13 +203,12 @@ const option_diff = {
     name: "PSFC",
     index: 10,
     color: [
-      "#59ff00",
-      "#50e900",
-      "#46d400",
-      "#3dbe00",
-      "#33a900",
-      "#2a9300",
-      "#207e00",
+      "#b9ffdd",
+      "#a0e9bb",
+      "#86d4aa",
+      "#7dbe66",
+      "#53a944",
+      "#2a9322",
     ],
     min: 35000,
     max: 110000,
@@ -212,18 +217,14 @@ const option_diff = {
     name: "AQI",
     index: 17,
     color: [
-      "#00ff59",
-      "#1cea57",
-      "#38d655",
-      "#54c153",
-      "#70ad51",
-      "#8b984e",
-      "#a7844c",
-      "#c36f4a",
-      "#df5b48",
-      "#fb4646",
+      "#daffd9",
+      "#8ceaa7",
+      "#94c153",
+      "#f0ad51",
+      "#ff5b48",
+      "#ff3646",
     ],
-    min: 10,
+    min: 0,
     max: 300,
   },
 }
@@ -275,7 +276,7 @@ function drawProvinceMap(province_name, attr) {
 
   Promise.all([
     fetch(`province_map/${province_name}.json`).then((res) => res.json()),
-    fetch(`dataset/CN-Reanalysis-daily-${currentDate.replace('-', '').replace('-', '')}00.csv`).then((response) =>
+    fetch(`data/origin/CN-Reanalysis-daily-${currentDate.replace('-', '').replace('-', '')}00.csv`).then((response) =>
       response.text()
     ),
   ]).then(([provinceGeoJson, csvData]) => {
@@ -320,7 +321,7 @@ function drawMap(attr, date) {
     attr = temattr
   }
   currentDate = date
-  fetch(`dataset/CN-Reanalysis-daily-${date.replace('-', '').replace('-', '')}00.csv`).then((response) =>
+  fetch(`data/origin/CN-Reanalysis-daily-${date.replace('-', '').replace('-', '')}00.csv`).then((response) =>
     response.text()
   ).then((csvData) => {
     let data = [];
@@ -337,8 +338,8 @@ function drawMap(attr, date) {
     }
     // 绘制地图
     option_map.series[0].data = data;
-    option_map.series[0].blurSize = 1
-    option_map.series[0].pointSize = 1
+    option_map.series[0].blurSize = 3
+    option_map.series[0].pointSize = 1.6
     option_map.title.text = attr
     option_map.visualMap.inRange.color = option_diff[attr].color
     option_map.visualMap.min = option_diff[attr].min;
@@ -351,7 +352,8 @@ function drawMap(attr, date) {
     chinaMap.on("dblclick", function (item) {
       flag = 0;
       pName = item.name;
-      drawProvinceMap(pName, attr, temIndex);
+      tempro = item.name
+      drawProvinceMap(pName, attr, temIndex);point
     });
 
     chinaMap.on("click", function (item) {
@@ -382,7 +384,7 @@ Object.keys(buttonMapping).forEach((key) => {
       drawMap(buttonMapping[key], currentDate);
       temattr = buttonMapping[key];
     } else {
-      drawProvinceMap(pName, buttonMapping[key]);
+      drawProvinceMap(tempro, buttonMapping[key]);
       temattr = buttonMapping[key];
     }
   });

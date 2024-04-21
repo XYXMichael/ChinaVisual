@@ -185,7 +185,7 @@ var heatmapOption = {
       axisLabel: {
         fontSize: "1rem",
         align: "center",
-        margin: 150,
+        margin: 75,
       },
     },
   ],
