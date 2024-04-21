@@ -24,10 +24,10 @@ var heatmapOption = {
     }, {
         width: '25%',
         top: '40',
-        left: '66%'
+        left: '70%',
     }
     ],
-    tooltip:{
+    tooltip: {
         show: true,
     },
     xAxis: [{
@@ -61,11 +61,12 @@ var heatmapOption = {
         splitArea: {
             show: false
         },
-        show: false,
+        show: true,
         axisLine: {
             show: false
         }
-    }, {
+    }
+        , {
         gridIndex: 1,
         type: 'category',
         data: ['浙江省'],
@@ -78,9 +79,11 @@ var heatmapOption = {
         },
         axisLabel: {
             fontSize: '1rem',
-            align: 'center'
+            align: 'center',
+            margin: 50
         }
-    }], series: [{
+    }]
+    , series: [{
         type: 'custom',
         data: [],
         renderItem: function (params, api) {
@@ -96,7 +99,7 @@ var heatmapOption = {
                 var width = api.size([0, 1])[0];
 
                 var kk = parseInt(categoryIndex / standard) + 5
-                var rgb = getValueColor(kk,5, 18)
+                var rgb = getValueColor(kk, 5, 18)
                 for (j = 0; j < kk; j++) {
                     item.push({
                         type: 'line',
@@ -109,7 +112,7 @@ var heatmapOption = {
                             x2: startPoint[0] + (width / 2 - 2),
                             y2: startPoint[1],
                         },
-                        style:{
+                        style: {
                             stroke: rgb,
                             fill: rgb,
                             lineWidth: 2
@@ -119,18 +122,23 @@ var heatmapOption = {
                 }
                 group.push({ type: 'group', children: item })
             }
-            return  {
+            return {
                 type: 'group',
                 children: group
             }
         },
         tooltip: {
-            position:'bottom',
+            position: 'bottom',
             formatter: function (params) {
                 console.log(params)
                 return params.name + ':<br/>' + params.value
             }
         },
+    }, {
+        type: 'bar',
+        data: [100],
+        yAxisIndex: 1,
+        xAxisIndex: 1
     }]
 };
 
@@ -144,14 +152,19 @@ var standardValue = {
     'AQI': 15,
 }
 
+// 地图变量
+var heatmapChart
+
+// 设置地图
 function setHotMap(year, type) {
     getAverageData_Province_month(year, type).then((result) => {
         var parentWidth = document.getElementById('heatmap').offsetWidth;
         const names = result.map(item => item.name);
         var height_one = 0.55 * parentWidth / 12 * names.length
-        var heatmapChart = echarts.init(document.getElementById('heatmap'), null, {
+        heatmapChart = echarts.init(document.getElementById('heatmap'), null, {
             height: height_one + 100
         });
+
         standard = standardValue[type]
         heatmapChart.setOption(heatmapOption);
 
@@ -179,14 +192,41 @@ function setHotMap(year, type) {
                 axisLine: {
                     show: false
                 }
-            }], grid: [{
+            }
+            ], grid: [{
                 height: height_one,
             }, {
                 height: height_one,
             }
             ]
         })
+        setBarChart("2013-01-01", 'AQI')
+
     })
 }
 
+function setBarChart(year, type) {
+    getOneAverageData_province_day(year, type).then((result) => {
+        console.log(result)
+        const keys = Object.keys(result);
+
+        const sortedKeys = keys.slice().sort((a, b) => (result[b]) - (result[a]));
+
+        const values = keys.map(key => result[key]);
+
+        values.sort((a, b) => b - a);
+        console.log(sortedKeys); // ["山东省", "天津市", "上海市", ...]
+        console.log(values); // [120, 102, 99, ...]
+
+        heatmapChart.setOption({
+            series: [{},{
+                type: 'bar',
+                data: values,
+                yAxisIndex: 1,
+                xAxisIndex: 1
+            }]
+        });
+    })
+
+}
 

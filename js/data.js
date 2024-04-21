@@ -115,13 +115,43 @@ async function getAverageData_Province_day(date, province) {
         var row = rows[i];
         var columns = row.split(',');
         if (columns[1] === date) {
-            console.log(columns)
             return columns
         }
     }
 }
 
-getAverageData_Province_day("2013-01-01", "上海市")
+/**
+ * 获取每天省份的一项平均数据
+ * @param {*} date 
+ * @param {*} type 
+ * @returns 
+ */
+async function getOneAverageData_province_day(date,type){
+    const res = await fetch(`data_group_province/${date}.csv`);
+    const csvContent = await res.text();
+    
+    var rows = csvContent.split('\n');
+    var result_1 = {};
+    var columns = rows[0].split(',');
+    var index = 0;
+    for (index = 0; index < columns.length; index++) {
+        if (columns[index] == type)
+            break;
+    }
+    for (var i = 1; i < rows.length - 1; i++) {
+        var row = rows[i];
+        var columns = row.split(',');
+        var province = columns[0];
+        var need_col = parseFloat(columns[index]);
+        result_1[province]=need_col;
+    }
+    console.log(result_1)
+
+    return result_1
+}
+
+getOneAverageData_province_day('2013-01-01',"AQI")
+
 
 /**
  * 返回一项数据的经纬度、值，用于绘图
