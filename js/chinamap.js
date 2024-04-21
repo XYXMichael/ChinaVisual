@@ -304,12 +304,18 @@ function drawMap(attr, date) {
     /**
      * 设置地图省份下钻点击事件
      */
-    chinaMap.on("click", function (item) {
+    chinaMap.on("dblclick", function (item) {
       flag = 0;
       console.log(item);
       pName = item.name;
       setControllor("2013-01-01", pName);
       drawProvinceMap(pName, attr, temIndex);
+    });
+
+    chinaMap.on("click", function (item) {
+      flag = 0;
+      pName = item.name;
+      setControllor("2013-01-01", pName);
     });
   });
 }

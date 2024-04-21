@@ -1,7 +1,7 @@
 var date = "2013-01-01";
 // 初始化Echarts实例
 var myChart = echarts.init(document.getElementById("box2"));
-var province = document.getElementById("province");
+var province_div = document.getElementById("province");
 var province_name = "北京";
 
 var data = [];
@@ -49,8 +49,11 @@ const provinceSimp2All = {
 // 日期修改
 document.getElementById("date_title").addEventListener("change", function () {
     date = document.getElementById("date_title").children[0].value;
-    console.log(province_name)
     setControllor(date, province_name)
+    // setBarChart(date).then(() => {
+    //     setHotMap(date, 'AQI');
+    // });
+    setTogether(date,"AQI")
 });
 
 // 设置圆环图配置
@@ -140,25 +143,25 @@ let donutChart6 = echarts.init(document.getElementById("donut6"));
 
 // 设置点击事件
 document.getElementById("aqi").addEventListener('click', function () {
-    setHotMap(date.slice(0, 4), 'AQI')
+    setHotMap(date, 'AQI')
 });
 document.getElementById("donut1").addEventListener('click', function () {
-    setHotMap(date.slice(0, 4), 'PM2.5')
+    setHotMap(date, 'PM2.5')
 });
 document.getElementById("donut2").addEventListener('click', function () {
-    setHotMap(date.slice(0, 4), 'PM10')
+    setHotMap(date, 'PM10')
 });
 document.getElementById("donut3").addEventListener('click', function () {
-    setHotMap(date.slice(0, 4), 'SO2')
+    setHotMap(date, 'SO2')
 });
 document.getElementById("donut4").addEventListener('click', function () {
-    setHotMap(date.slice(0, 4), 'NO2')
+    setHotMap(date, 'NO2')
 });
 document.getElementById("donut5").addEventListener('click', function () {
-    setHotMap(date.slice(0, 4), 'CO')
+    setHotMap(date, 'CO')
 });
 document.getElementById("donut6").addEventListener('click', function () {
-    setHotMap(date.slice(0, 4), 'O3')
+    setHotMap(date, 'O3')
 });
 
 donutChart1.setOption(option);
@@ -209,7 +212,7 @@ function updateControl(data) {
     let o3 = data[10];
     let name = data[11];
 
-    province.textContent = name;
+    province_div.textContent = name;
     document.getElementById("aqi").textContent =
         "AQI " + aqi.toString().slice(0, 6);
     document.getElementById("wind").textContent =
@@ -365,7 +368,6 @@ function updateControl(data) {
 function setControllor(date1, province) {
     date = date1
     var province_all = provinceSimp2All[province]
-    console.log(province_all)
     getAverageData_Province_day(date1, province_all).then((row) => {
         data = [];
         data.push(row[13] + " " + row[14]);
@@ -382,7 +384,7 @@ function setControllor(date1, province) {
         data.push(row[5]);
         data.push(row[6]);
         data.push(row[7]);
-        data.push(province_name);
+        data.push(province);
         updateControl(data);
     })
 }

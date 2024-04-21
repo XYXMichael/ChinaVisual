@@ -84,8 +84,11 @@ async function getAverageData_Province_month(year, type) {
     }
     for (var i = 1; i < rows.length - 1; i++) {
         var row = rows[i];
+
         var columns = row.split(',');
         var province = columns[0];
+        if (province == "海外")
+            continue;
         var need_col = parseFloat(columns[index]);
         if (!result_1[province]) {
             result_1[province] = [];
@@ -126,10 +129,10 @@ async function getAverageData_Province_day(date, province) {
  * @param {*} type 
  * @returns 
  */
-async function getOneAverageData_province_day(date,type){
+async function getOneAverageData_province_day(date, type) {
     const res = await fetch(`data_group_province/${date}.csv`);
     const csvContent = await res.text();
-    
+
     var rows = csvContent.split('\n');
     var result_1 = {};
     var columns = rows[0].split(',');
@@ -140,17 +143,17 @@ async function getOneAverageData_province_day(date,type){
     }
     for (var i = 1; i < rows.length - 1; i++) {
         var row = rows[i];
+
         var columns = row.split(',');
         var province = columns[0];
+        if (province == "海外")
+            continue;
         var need_col = parseFloat(columns[index]);
-        result_1[province]=need_col;
+        result_1[province] = need_col;
     }
-    console.log(result_1)
 
     return result_1
 }
-
-getOneAverageData_province_day('2013-01-01',"AQI")
 
 
 /**
