@@ -1,5 +1,12 @@
+@media (min-width: 3000px) {
+    html {
+        font-size: 26px;
+    }
+}
+
+
 /* 大屏幕（>= 1200px） */
-@media (min-width: 2000px) {
+@media (min-width: 2000px) and (max-width: 3000px){
     html {
         font-size: 18px;
     }
@@ -61,6 +68,7 @@ body {
     grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 3;
+    width:100%
 }
 
 #heatmap {
@@ -74,14 +82,14 @@ body {
     grid-column-end: 4;
     grid-row-start: 1;
     grid-row-end: 3;
-    max-height: 500px;
+    max-height: 450px;
     /* 允许垂直方向滑动 */
 }
 
 #box2 {
     width: 100%;
     flex-grow: 1;
-    /* height: 400px; */
+    height: 400px;
 }
 
 #box1 {
@@ -100,7 +108,6 @@ body {
 
 .head {
     width: 100%;
-    height: 40px;
     text-align: center;
     display: flex;
     justify-content: center;
@@ -114,11 +121,11 @@ body {
     text-align: center;
     background-color: #fff;
     flex-grow: 1;
-    height: 100%;
-    font-size: x-large;
+    height: 3vh;
+    font-size: 1.5rem;
     border-radius: 2px;
     /* 文字上下居中 */
-    line-height: 40px;
+    line-height: 3vh;
     font-family: '微软雅黑';
     font-weight: 550;
 
@@ -127,7 +134,7 @@ body {
 .head button {
     padding-left: 10px;
     padding-right: 10px;
-    font-size: small;
+    font-size: 1rem;
     border-radius: 2px;
     border: none;
     /* 取消边框，根据需要可自定义 */
@@ -154,22 +161,24 @@ body {
 }
 
 .control #date_title {
-    height: 30px;
+    height: 3vh;
     line-height: 30px;
     text-align: center;
     border-color: #e6e6e6;
     border-width: 2px;
     border-style: solid;
+    padding: 2px;
 }
 
 #date_title input {
     height: 100%;
-    width: 100%;
+    /* width: 100%; */
     border: 0;
     text-align: center;
-    font-size: 20px;
+    font-size: 1.5rem;
     font-family: '微软雅黑';
     font-weight: bold;
+
 }
 
 .control .item {
@@ -211,7 +220,7 @@ body {
 }
 
 .second-column .item:first-child {
-    height: 30px;
+    height: 3vh;
     flex-grow: 0;
 }
 
@@ -262,10 +271,9 @@ body {
     padding: 2px;
     border-radius: 2px;
     margin-top: 3px;
-    height: 25px;
+    height: 2.5vh;
     font-size: 1.4rem;
-    /* margin-left: px; */
     text-align: left;
-    line-height: 25px;
+    line-height: 2.5vh;
     background-color: #e6e6e6;
 }

@@ -3,7 +3,7 @@ var date = "2013-01-01";
 var myChart = echarts.init(document.getElementById("box2"));
 var province_div = document.getElementById("province");
 var province_name = "北京";
-
+var current_province = "北京市";
 var data = [];
 
 
@@ -54,6 +54,7 @@ document.getElementById("date_title").addEventListener("change", function () {
     //     setHotMap(date, 'AQI');
     // });
     setTogether(date,"AQI")
+    drawMap(null,date)
 });
 
 // 设置圆环图配置
@@ -109,7 +110,7 @@ var option = {
             },
             title: {
                 show: true,
-                fontSize: 10,
+                fontSize: '1.2rem',
                 offsetCenter: [0, "85%"],
             },
             detail: {
@@ -118,7 +119,7 @@ var option = {
                 lineHeight: 40,
                 borderRadius: 8,
                 offsetCenter: [0, "-1%"],
-                fontSize: "0.9rem",
+                fontSize: "1rem",
                 fontWeight: "bolder",
                 formatter: "{value}",
                 color: "inherit",
@@ -222,7 +223,7 @@ function updateControl(data) {
     document.getElementById("humidity").textContent =
         humidity.toString().slice(0, 6) + " %";
     document.getElementById("pressure").textContent =
-        pressure.toString().slice(0, 5) + " Pa";
+        pressure.toString().slice(0, 6).replace('.','') + " Pa";
 
     donutChart1.setOption({
         series: [
@@ -365,28 +366,53 @@ function updateControl(data) {
     });
 }
 
-function setControllor(date1, province) {
+function setControllor(date1, name) {
     date = date1
-    var province_all = provinceSimp2All[province]
-    getAverageData_Province_day(date1, province_all).then((row) => {
-        data = [];
-        data.push(row[13] + " " + row[14]);
-        data.push(
-            calculateWindDirection(row[8], row[9]) + "  " +
-            Math.sqrt(row[9] * row[9], row[8] * row[8])
-        );
-        data.push(row[10] - 272.15);
-        data.push(row[11]);
-        data.push(row[12]);
-        data.push(row[2]);
-        data.push(row[3]);
-        data.push(row[4]);
-        data.push(row[5]);
-        data.push(row[6]);
-        data.push(row[7]);
-        data.push(province);
-        updateControl(data);
-    })
+    if(name in provinceSimp2All){
+        current_province = provinceSimp2All[name]
+        getAverageData_Province_day(date1, current_province).then((row) => {
+            console.log(row)
+            data = [];
+            data.push(row[13] + " " + row[14]);
+            data.push(
+                calculateWindDirection(row[8], row[9]) + "  " +
+                Math.sqrt(row[9] * row[9], row[8] * row[8])
+            );
+            data.push(row[10] - 272.15);
+            data.push(row[11]);
+            data.push(row[12]);
+            data.push(row[2]);
+            data.push(row[3]);
+            data.push(row[4]);
+            data.push(row[5]);
+            data.push(row[6]);
+            data.push(row[7]);
+            data.push(name);
+            updateControl(data);
+        })
+    }else{
+        getAverageData_City_day(date,current_province,name).then(function(row){
+            console.log(row)
+            data = [];
+            data.push(row[14] + " " + row[15]);
+            data.push(
+                calculateWindDirection(row[10], row[9]) + "  " +
+                Math.sqrt(row[9] * row[9], row[10] * row[10])
+            );
+            data.push(row[11] - 272.15);
+            data.push(row[12]);
+            data.push(row[13]);
+            data.push(row[3]);
+            data.push(row[4]);
+            data.push(row[5]);
+            data.push(row[6]);
+            data.push(row[7]);
+            data.push(row[8]);
+            data.push(name);
+            updateControl(data);
+        })
+    }
+
 }
 
 setControllor("2013-01-01", "上海")

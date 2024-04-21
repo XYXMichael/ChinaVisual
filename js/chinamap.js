@@ -1,24 +1,69 @@
 var tempData = [];
 let flag = 1;
 var chinaMap = echarts.init(document.getElementById("box2"));
-var temButton = document.getElementById("temperature");
-var humButton = document.getElementById("humidity");
-var windButton = document.getElementById("wind");
-var pressureButton = document.getElementById("pressure");
-var pm25Button = document.getElementById("donut1");
-var pm10Button = document.getElementById("donut2");
-var so2Button = document.getElementById("donut3");
-var no2Button = document.getElementById("donut4");
-var coButton = document.getElementById("donut5");
-var o3Button = document.getElementById("donut6");
-var aqiButton = document.getElementById("aqi");
-var change_button = document.getElementById("change");
 var pName = "";
 var temIndex = 0;
 let tempdata = [];
-let temattr = [];
-var dataIndex = [
-  {
+let temattr = "TEMP";
+let currentDate = "2013-01-01";
+
+var option_map = {
+  backgroundColor: "#404a59",
+  title: {
+    text: "TEMP",
+    show: true,
+    top: 20, // 将标题距离顶部 20 像素
+    textStyle: {
+      fontSize: 18,
+      color: "#fff", // 设置标题文字颜色为白色
+      fontSize:'3rem'
+
+    },
+  },
+  geo: {
+    map: "china",
+    label: {
+      show: false,
+      color: "#0a0a0a", // 调整省份标签的颜色
+      fontSize: "1rem",
+    },
+    itemStyle: {
+      borderColor: "#0a0a0a", // 边界线条颜色
+      borderWidth: 1, // 边界线条宽度
+    },
+  },
+  visualMap: {
+    min: 0,
+    max: 300,
+    calculable: true,
+    orient: "vertical",
+    left: "left",
+    top: "bottom",
+    inRange: {
+      color: ["#f7fcf0", "#e0f3db", "#ccebc5", "#a8ddb5", "#7bccc4"],
+    },
+  },
+  series: [
+    {
+      type: "heatmap",
+      coordinateSystem: "geo",
+      roam: true, // 允许缩放和平移漫游
+      // 设置缩放的比例
+      zoom: 1.2,
+      // 设置缩放的限制
+      scaleLimit: {
+        min: 1,
+        max: 10,
+      },
+      data: [],
+      pointSize: 1,
+      blurSize: 4,
+    },
+  ],
+};
+
+const option_diff = {
+  "PM2.5": {
     name: "PM2.5",
     index: 0,
     color: [
@@ -34,9 +79,9 @@ var dataIndex = [
       "#39003d",
     ],
     min: 0,
-    max: 100,
+    max: 150,
   },
-  {
+  "PM10": {
     name: "PM10",
     index: 1,
     color: [
@@ -48,31 +93,23 @@ var dataIndex = [
       "#939000",
       "#7d7b00",
       "#676600",
-      "#525200",
-      "#3c3d00",
     ],
     min: 0,
-    max: 200,
+    max: 250,
   },
-  {
+  "SO2": {
     name: "SO2",
     index: 2,
     color: [
-      "#ff00ae",
+      "#e0e0e0",
       "#e900a0",
-      "#d40092",
       "#be0085",
-      "#a90077",
-      "#930069",
       "#7e005b",
-      "#68004e",
-      "#530040",
-      "#3d0032",
     ],
-    min: 0,
+    min: -10,
     max: 200,
   },
-  {
+  "NO2": {
     name: "NO2",
     index: 3,
     color: [
@@ -88,9 +125,9 @@ var dataIndex = [
       "#363d00",
     ],
     min: 0,
-    max: 100,
+    max: 180,
   },
-  {
+  "CO": {
     name: "CO",
     index: 4,
     color: [
@@ -106,9 +143,9 @@ var dataIndex = [
       "#9e6400",
     ],
     min: 0,
-    max: 2,
+    max: 8,
   },
-  {
+  "O3": {
     name: "O3",
     index: 5,
     color: [
@@ -118,15 +155,12 @@ var dataIndex = [
       "#aae6ae",
       "#8edd93",
       "#71d578",
-      "#55cc5d",
-      "#39c442",
-      "#1cbb27",
-      "#00b30c",
+
     ],
     min: 0,
-    max: 100,
+    max: 215,
   },
-  {
+  "TEMP": {
     name: "TEMP",
     index: 8,
     color: [
@@ -135,17 +169,13 @@ var dataIndex = [
       "#74add1",
       "#abd9e9",
       "#e0f3f8",
-      "#ffffbf",
-      "#fee090",
       "#fdae61",
       "#f46d43",
-      "#d73027",
-      "#a50026",
     ],
-    min: 230,
+    min: 250,
     max: 300,
   },
-  {
+  "RH": {
     name: "RH",
     index: 9,
     color: [
@@ -163,7 +193,7 @@ var dataIndex = [
     min: 0,
     max: 100,
   },
-  {
+  "PSFC": {
     name: "PSFC",
     index: 10,
     color: [
@@ -178,7 +208,7 @@ var dataIndex = [
     min: 35000,
     max: 110000,
   },
-  {
+  "AQI": {
     name: "AQI",
     index: 17,
     color: [
@@ -194,9 +224,10 @@ var dataIndex = [
       "#fb4646",
     ],
     min: 10,
-    max: 380,
+    max: 300,
   },
-];
+}
+
 const provinceToEnglish = {
   北京: "beijing",
   天津: "tianjin",
@@ -233,22 +264,25 @@ const provinceToEnglish = {
   澳门: "aomen",
   台湾: "taiwan",
 };
+// 初始化全国地图，这里是异步！！！所以不能直接在这里加载地图
+fetch("china.json").then((response) => response.json()).then((data) => {
+  echarts.registerMap("china", data); // 注册地图数据
+  drawMap("TEMP", "2013-01-01");
+
+})
+
 function drawProvinceMap(province_name, attr) {
-  chinaMap.clear();
+
   Promise.all([
-    fetch(`../province_map/${province_name}.json`).then((res) => res.json()),
-    fetch("../dataset/CN-Reanalysis-daily-2013010100.csv").then((response) =>
+    fetch(`province_map/${province_name}.json`).then((res) => res.json()),
+    fetch(`dataset/CN-Reanalysis-daily-${currentDate.replace('-', '').replace('-', '')}00.csv`).then((response) =>
       response.text()
     ),
   ]).then(([provinceGeoJson, csvData]) => {
     var rows = csvData.split("\n");
     var provinceData = [];
-    let index = 0;
-    for (let i = 0; i < dataIndex.length; i++) {
-      if (dataIndex[i].name == attr) {
-        index = dataIndex[i].index;
-      }
-    }
+    let index = option_diff[attr].index;
+
     for (let i = 1; i < rows.length - 1; i++) {
       var row = rows[i].split(",");
       if (row[13].includes(province_name)) {
@@ -259,33 +293,39 @@ function drawProvinceMap(province_name, attr) {
         ]);
       }
     }
-    tempdata = provinceData;
-    console.log(attr);
-    console.log("省份数据：", provinceData);
+
     echarts.registerMap(provinceToEnglish[province_name], provinceGeoJson); // 注册地图数据
-    chinaMap.setOption(
-      getOption(provinceToEnglish[province_name], attr, provinceData)
-    );
+    option_map.series[0].blurSize = 10
+    option_map.series[0].pointSize = 5
+    option_map.series[0].data = provinceData
+    option_map.title.text = attr
+    option_map.geo.map = provinceToEnglish[province_name]
+    option_map.visualMap.min = option_diff[attr].min;
+    option_map.visualMap.max = option_diff[attr].max;
+    option_map.visualMap.inRange.color = option_diff[attr].color;
+    chinaMap.setOption(option_map);
+
+    chinaMap.on("click", function (item) {
+      console.log(item)
+      pName = item.name;
+      console.log(pName)
+
+      setControllor(currentDate, pName);
+    });
   });
 }
 
 function drawMap(attr, date) {
-  let data = [];
-  let index = 0;
-  for (let i = 0; i < dataIndex.length; i++) {
-    if (dataIndex[i].name == attr) {
-      index = dataIndex[i].index;
-      temIndex = index;
-    }
+  if(attr == null){
+    attr = temattr
   }
-  // 使用 Promise.all 等待所有数据加载完成
-  Promise.all([
-    fetch(`../dataset/CN-Reanalysis-daily-2013010100.csv`).then((response) =>
-      response.text()
-    ),
-    fetch("china.json").then((response) => response.json()),
-  ]).then(([csvData, chinaGeoJson]) => {
-    chinaMap.clear();
+  currentDate = date
+  fetch(`dataset/CN-Reanalysis-daily-${date.replace('-', '').replace('-', '')}00.csv`).then((response) =>
+    response.text()
+  ).then((csvData) => {
+    let data = [];
+    let index = option_diff[attr].index;
+    let temIndex = option_diff[attr].temIndex;
     var rows = csvData.split("\n");
     for (var i = 1; i < rows.length; i++) {
       var row = rows[i].split(",");
@@ -295,117 +335,33 @@ function drawMap(attr, date) {
         parseFloat(row[index]), // temperature
       ]);
     }
-    temattr = attr;
-    tempdata = data;
     // 绘制地图
-    echarts.registerMap("china", chinaGeoJson); // 注册地图数据
-
-    chinaMap.setOption(getOption("china", attr, data));
+    option_map.series[0].data = data;
+    option_map.series[0].blurSize = 1
+    option_map.series[0].pointSize = 1
+    option_map.title.text = attr
+    option_map.visualMap.inRange.color = option_diff[attr].color
+    option_map.visualMap.min = option_diff[attr].min;
+    option_map.visualMap.max = option_diff[attr].max;
+    option_map.geo.map = "china"
+    chinaMap.setOption(option_map);
     /**
      * 设置地图省份下钻点击事件
      */
     chinaMap.on("dblclick", function (item) {
       flag = 0;
-      console.log(item);
       pName = item.name;
-      setControllor("2013-01-01", pName);
       drawProvinceMap(pName, attr, temIndex);
     });
 
     chinaMap.on("click", function (item) {
-      flag = 0;
       pName = item.name;
-      setControllor("2013-01-01", pName);
+      setControllor(currentDate, pName);
     });
   });
 }
-change_button.addEventListener("click", function () {
-  if (flag == 0) {
-    flag = 1;
-    drawMap(temattr, date);
-  }
-});
-/**
- * 根据对应的属性和数据设置option
- * @param {*} attr
- * @param {*} data
- * @returns
- */
-function getOption(name, attr, data) {
-  let min = 0;
-  let max = 0;
-  let blur = 0;
-  let pointsize = 0;
-  let color = [];
-  for (let i = 0; i < dataIndex.length; i++) {
-    if (dataIndex[i].name == attr) {
-      color = dataIndex[i].color;
-      min = dataIndex[i].min;
-      max = dataIndex[i].max;
-    }
-  }
-  if (name == "china") {
-    blur = 4;
-    pointsize = 1;
-  } else {
-    blur = 10;
-    pointsize = 5;
-  }
-  var option = {
-    backgroundColor: "#404a59",
 
-    title: {
-      text: attr,
-      show: true,
-      top: 20, // 将标题距离顶部 20 像素
-      textStyle: {
-        fontSize: 18,
-        color: "#fff", // 设置标题文字颜色为白色
-      },
-    },
-    geo: {
-      map: name,
-      label: {
-        show: false,
-        color: "#4a4a4a", // 调整省份标签的颜色
-      },
-      itemStyle: {
-        borderColor: "#fff", // 边界线条颜色
-        borderWidth: 1, // 边界线条宽度
-      },
-    },
-    visualMap: {
-      min: min,
-      max: max,
-      calculable: true,
-      orient: "vertical",
-      left: "left",
-      top: "bottom",
-      inRange: {
-        color: color,
-      },
-    },
-    series: [
-      {
-        type: "heatmap",
-        coordinateSystem: "geo",
-        roam: true, // 允许缩放和平移漫游
-        // 设置缩放的比例
-        zoom: 1.2,
-        // 设置缩放的限制
-        scaleLimit: {
-          min: 1,
-          max: 10,
-        },
-        data: data,
-        pointSize: pointsize,
-        blurSize: blur,
-      },
-    ],
-  };
-  return option;
-}
-drawMap("TEMP", "20130101");
+
 const buttonMapping = {
   temperature: "TEMP",
   humidity: "RH",
@@ -422,9 +378,8 @@ const buttonMapping = {
 
 Object.keys(buttonMapping).forEach((key) => {
   document.getElementById(key).addEventListener("click", function () {
-    chinaMap.clear();
     if (flag == 1) {
-      drawMap(buttonMapping[key], "20130101");
+      drawMap(buttonMapping[key], currentDate);
       temattr = buttonMapping[key];
     } else {
       drawProvinceMap(pName, buttonMapping[key]);
@@ -432,3 +387,11 @@ Object.keys(buttonMapping).forEach((key) => {
     }
   });
 });
+
+document.getElementById("change").addEventListener("click", function () {
+  if (flag == 0) {
+    flag = 1;
+    drawMap(temattr, date);
+  }
+});
+

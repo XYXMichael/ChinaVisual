@@ -124,6 +124,26 @@ async function getAverageData_Province_day(date, province) {
 }
 
 /**
+ * 获取某一天某个省份的平均数据
+ * @param {*} date 日期
+ * @param {*} province 省
+ * @returns 
+ */
+async function getAverageData_City_day(date, province, city) {
+    const res = await fetch(`city_data_group/${province}/${city}.csv`);
+    const csvContent = await res.text();
+    var rows = csvContent.split('\n');
+    var columns = rows[0].split(',');
+    for (var i = 1; i < rows.length - 1; i++) {
+        var row = rows[i];
+        var columns = row.split(',');
+        if (columns[2] === date) {
+            return columns
+        }
+    }
+}
+
+/**
  * 获取每天省份的一项平均数据
  * @param {*} date 
  * @param {*} type 
