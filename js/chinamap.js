@@ -13,8 +13,10 @@ var coButton = document.getElementById("donut5");
 var o3Button = document.getElementById("donut6");
 var aqiButton = document.getElementById("aqi");
 var change_button = document.getElementById("change");
-let tempdata=[];
-let temattr=[];
+var pName = "";
+var temIndex = 0;
+let tempdata = [];
+let temattr = [];
 var dataIndex = [
   {
     name: "PM2.5",
@@ -231,18 +233,49 @@ const provinceToEnglish = {
   澳门: "aomen",
   台湾: "taiwan",
 };
-/**
- * 根据对应的按钮属性绘制对应的中国热力地图
- *
- * @param attr 地图属性
- * @param date 日期
- */
+function drawProvinceMap(province_name, attr) {
+  chinaMap.clear();
+  Promise.all([
+    fetch(`../province_map/${province_name}.json`).then((res) => res.json()),
+    fetch("../dataset/CN-Reanalysis-daily-2013010100.csv").then((response) =>
+      response.text()
+    ),
+  ]).then(([provinceGeoJson, csvData]) => {
+    var rows = csvData.split("\n");
+    var provinceData = [];
+    let index = 0;
+    for (let i = 0; i < dataIndex.length; i++) {
+      if (dataIndex[i].name == attr) {
+        index = dataIndex[i].index;
+      }
+    }
+    for (let i = 1; i < rows.length - 1; i++) {
+      var row = rows[i].split(",");
+      if (row[13].includes(province_name)) {
+        provinceData.push([
+          parseFloat(row[12]), // longitude
+          parseFloat(row[11]), // latitude
+          parseFloat(row[index]),
+        ]);
+      }
+    }
+    tempdata = provinceData;
+    console.log(attr);
+    console.log("省份数据：", provinceData);
+    echarts.registerMap(provinceToEnglish[province_name], provinceGeoJson); // 注册地图数据
+    chinaMap.setOption(
+      getOption(provinceToEnglish[province_name], attr, provinceData)
+    );
+  });
+}
+
 function drawMap(attr, date) {
   let data = [];
   let index = 0;
   for (let i = 0; i < dataIndex.length; i++) {
     if (dataIndex[i].name == attr) {
       index = dataIndex[i].index;
+      temIndex = index;
     }
   }
   // 使用 Promise.all 等待所有数据加载完成
@@ -267,64 +300,36 @@ function drawMap(attr, date) {
     // 绘制地图
     echarts.registerMap("china", chinaGeoJson); // 注册地图数据
 
-    chinaMap.setOption(getOption(attr, data));
+    chinaMap.setOption(getOption("china", attr, data));
+    /**
+     * 设置地图省份下钻点击事件
+     */
     chinaMap.on("click", function (item) {
       flag = 0;
-      province_name = item.name;
-      fetch(`province_map/${province_name}.json`)
-        .then(function (res) {
-          return res.json();
-        })
-        .then(function (provinceGeoJson) {
-          console.log(province_name);
-          // 绘制地图
-          setControllor("2013-01-01", province_name);
-          echarts.registerMap(
-            provinceToEnglish[province_name],
-            provinceGeoJson
-          ); // 注册地图数据
-          chinaMap.clear();
-          chinaMap.setOption({
-            series: [
-              {
-                type: "map",
-                map: provinceToEnglish[province_name], // 使用注册的地图数据
-                roam: true, // 允许缩放和平移漫游
-                // 设置缩放的比例
-                zoom: 1.2,
-                // 设置缩放的限制
-                scaleLimit: {
-                  min: 1,
-                  max: 10,
-                },
-              },
-            ],
-          });
-        });
+      console.log(item);
+      pName = item.name;
+      setControllor("2013-01-01", pName);
+      drawProvinceMap(pName, attr, temIndex);
     });
   });
-  change_button.addEventListener("click", function () {
-    if (flag == 0) {
-      flag = 1;
-      fetch("china.json")
-        .then(function (res) {
-          return res.json();
-        })
-        .then(function (chinaGeoJson) {
-          // 隐藏加载动画
-          chinaMap.hideLoading();
-          chinaMap.clear();
-
-          // 绘制地图
-          echarts.registerMap("china", chinaGeoJson); // 注册地图数据
-          chinaMap.setOption(getOption(temattr, tempdata));
-        });
-    }
-  });
 }
-function getOption(attr, data) {
+change_button.addEventListener("click", function () {
+  if (flag == 0) {
+    flag = 1;
+    drawMap(temattr, date);
+  }
+});
+/**
+ * 根据对应的属性和数据设置option
+ * @param {*} attr
+ * @param {*} data
+ * @returns
+ */
+function getOption(name, attr, data) {
   let min = 0;
   let max = 0;
+  let blur = 0;
+  let pointsize = 0;
   let color = [];
   for (let i = 0; i < dataIndex.length; i++) {
     if (dataIndex[i].name == attr) {
@@ -332,6 +337,13 @@ function getOption(attr, data) {
       min = dataIndex[i].min;
       max = dataIndex[i].max;
     }
+  }
+  if (name == "china") {
+    blur = 4;
+    pointsize = 1;
+  } else {
+    blur = 10;
+    pointsize = 5;
   }
   var option = {
     backgroundColor: "#404a59",
@@ -346,7 +358,7 @@ function getOption(attr, data) {
       },
     },
     geo: {
-      map: "china",
+      map: name,
       label: {
         show: false,
         color: "#4a4a4a", // 调整省份标签的颜色
@@ -380,41 +392,37 @@ function getOption(attr, data) {
           max: 10,
         },
         data: data,
-        pointSize: 1,
-        blurSize: 4,
+        pointSize: pointsize,
+        blurSize: blur,
       },
     ],
   };
   return option;
 }
 drawMap("TEMP", "20130101");
-temButton.addEventListener("click", function () {
-  drawMap("TEMP", "20130101");
-});
-humButton.addEventListener("click", function () {
-  drawMap("RH", "20130101");
-});
-pm25Button.addEventListener("click", function () {
-  drawMap("PM2.5", "20130101");
-});
-pm10Button.addEventListener("click", function () {
-  drawMap("PM10", "20130101");
-});
-so2Button.addEventListener("click", function () {
-  drawMap("SO2", "20130101");
-});
-no2Button.addEventListener("click", function () {
-  drawMap("NO2", "20130101");
-});
-coButton.addEventListener("click", function () {
-  drawMap("CO", "20130101");
-});
-o3Button.addEventListener("click", function () {
-  drawMap("O3", "20130101");
-});
-pressureButton.addEventListener("click", function () {
-  drawMap("PSFC", "20130101");
-});
-aqiButton.addEventListener("click", function () {
-  drawMap("AQI", "20130101");
+const buttonMapping = {
+  temperature: "TEMP",
+  humidity: "RH",
+  wind: "WIND", // 假设有一个风速属性"WIND"，请根据实际情况调整
+  pressure: "PSFC",
+  donut1: "PM2.5",
+  donut2: "PM10",
+  donut3: "SO2",
+  donut4: "NO2",
+  donut5: "CO",
+  donut6: "O3",
+  aqi: "AQI",
+};
+
+Object.keys(buttonMapping).forEach((key) => {
+  document.getElementById(key).addEventListener("click", function () {
+    chinaMap.clear();
+    if (flag == 1) {
+      drawMap(buttonMapping[key], "20130101");
+      temattr = buttonMapping[key];
+    } else {
+      drawProvinceMap(pName, buttonMapping[key]);
+      temattr = buttonMapping[key];
+    }
+  });
 });
