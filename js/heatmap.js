@@ -1,3 +1,18 @@
+var standard = 8
+
+function getValueColor(value, minValue, maxValue) {
+    // 将值从给定范围归一化到 0 到 1 之间
+    const normalizedValue = (value - minValue) / (maxValue - minValue);
+
+    // 计算红色和绿色的分量
+    const red = Math.round(240 * normalizedValue);
+    const green = Math.round(240 * (1 - normalizedValue));
+    const blue = 0;  // 蓝色分量保持为0
+
+    // 返回 RGB 颜色字符串
+    return `rgb(${red}, ${green}, ${blue})`;
+}
+
 var heatmapOption = {
     title: {
         show: false
@@ -12,6 +27,9 @@ var heatmapOption = {
         left: '66%'
     }
     ],
+    tooltip:{
+        show: true,
+    },
     xAxis: [{
         type: 'category',
         data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
@@ -68,6 +86,7 @@ var heatmapOption = {
         renderItem: function (params, api) {
             var group = []
             for (i = 0; i < 12; i++) {
+                var item = []
                 var categoryIndex = api.value(i);
                 // 这里使用 api.coord(...) 将数值在当前坐标系中转换成为屏幕上的点的像素值。
                 var startPoint = api.coord([i, params.dataIndex]);
@@ -76,9 +95,10 @@ var heatmapOption = {
                 var height = api.size([0, 1])[1];
                 var width = api.size([0, 1])[0];
 
-                var kk = parseInt(categoryIndex / 8) + 5
+                var kk = parseInt(categoryIndex / standard) + 5
+                var rgb = getValueColor(kk,5, 18)
                 for (j = 0; j < kk; j++) {
-                    group.push({
+                    item.push({
                         type: 'line',
                         rotation: 2 * j * Math.PI / kk,
                         originX: startPoint[0],
@@ -89,18 +109,40 @@ var heatmapOption = {
                             x2: startPoint[0] + (width / 2 - 2),
                             y2: startPoint[1],
                         },
+                        style:{
+                            stroke: rgb,
+                            fill: rgb,
+                            lineWidth: 2
+                        }
                     }
                     )
                 }
+                group.push({ type: 'group', children: item })
             }
-
-            return {
+            return  {
                 type: 'group',
                 children: group
-            };
-        }
+            }
+        },
+        tooltip: {
+            position:'bottom',
+            formatter: function (params) {
+                console.log(params)
+                return params.name + ':<br/>' + params.value
+            }
+        },
     }]
 };
+
+var standardValue = {
+    'PM2.5': 7,
+    'PM10': 15,
+    'SO2': 15,
+    'CO': 0.2,
+    'O3': 15,
+    'NO2': 8,
+    'AQI': 15,
+}
 
 function setHotMap(year, type) {
     getAverageData_Province_month(year, type).then((result) => {
@@ -110,6 +152,7 @@ function setHotMap(year, type) {
         var heatmapChart = echarts.init(document.getElementById('heatmap'), null, {
             height: height_one + 100
         });
+        standard = standardValue[type]
         heatmapChart.setOption(heatmapOption);
 
         heatmapChart.setOption({
