@@ -140,25 +140,25 @@ let donutChart6 = echarts.init(document.getElementById("donut6"));
 
 // 设置点击事件
 document.getElementById("aqi").addEventListener('click', function () {
-    setHotMap(date.slice(0, 4), 'AQI')
+    setHotMap(date, 'AQI')
 });
 document.getElementById("donut1").addEventListener('click', function () {
-    setHotMap(date.slice(0, 4), 'PM2.5')
+    setHotMap(date, 'PM2.5')
 });
 document.getElementById("donut2").addEventListener('click', function () {
-    setHotMap(date.slice(0, 4), 'PM10')
+    setHotMap(date, 'PM10')
 });
 document.getElementById("donut3").addEventListener('click', function () {
-    setHotMap(date.slice(0, 4), 'SO2')
+    setHotMap(date, 'SO2')
 });
 document.getElementById("donut4").addEventListener('click', function () {
-    setHotMap(date.slice(0, 4), 'NO2')
+    setHotMap(date, 'NO2')
 });
 document.getElementById("donut5").addEventListener('click', function () {
-    setHotMap(date.slice(0, 4), 'CO')
+    setHotMap(date, 'CO')
 });
 document.getElementById("donut6").addEventListener('click', function () {
-    setHotMap(date.slice(0, 4), 'O3')
+    setHotMap(date, 'O3')
 });
 
 donutChart1.setOption(option);
