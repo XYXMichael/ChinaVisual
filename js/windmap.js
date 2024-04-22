@@ -1,4 +1,4 @@
-var data=[]
+var data = [];
 fetch("exampledata.csv")
   .then((response) => response.text())
   .then((data) => {

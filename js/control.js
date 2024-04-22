@@ -6,53 +6,19 @@ var province_name = "北京";
 var current_province = "北京市";
 var data = [];
 
-// 从缩写到大写
-const provinceSimp2All = {
-  安徽: "安徽省",
-  福建: "福建省",
-  甘肃: "甘肃省",
-  广东: "广东省",
-  广西: "广西壮族自治区",
-  贵州: "贵州省",
-  海南: "海南省",
-  河北: "河北省",
-  河南: "河南省",
-  黑龙江: "黑龙江省",
-  湖北: "湖北省",
-  湖南: "湖南省",
-  吉林: "吉林省",
-  江苏: "江苏省",
-  江西: "江西省",
-  辽宁: "辽宁省",
-  内蒙古: "内蒙古自治区",
-  宁夏: "宁夏回族自治区",
-  青海: "青海省",
-  山东: "山东省",
-  山西: "山西省",
-  陕西: "陕西省",
-  上海: "上海市",
-  四川: "四川省",
-  天津: "天津市",
-  西藏: "西藏自治区",
-  新疆: "新疆维吾尔自治区",
-  云南: "云南省",
-  浙江: "浙江省",
-  重庆: "重庆市",
-  香港: "香港特别行政区",
-  澳门: "澳门特别行政区",
-  台湾: "台湾省",
-  北京: "北京市",
-};
-
 // 日期修改
 document.getElementById("date_title").addEventListener("change", function () {
   date = document.getElementById("date_title").children[0].value;
-  setControllor(date, province_name);
-  // setBarChart(date).then(() => {
-  //     setHotMap(date, 'AQI');
-  // });
-  setTogether(date, "AQI");
-  drawMap(null, date);
+  if (is_province) {
+    setControllor(date, current_province);
+    setProvinceTogether(current_province, date, "AQI");
+    console.log(current_city);
+    drawProvinceMap(current_city, "AQI");
+  } else {
+    setControllor(date, province_name);
+    setTogether(date, "AQI");
+    drawMap(null, date);
+  }
 });
 
 // 设置圆环图配置
@@ -142,25 +108,25 @@ let donutChart6 = echarts.init(document.getElementById("donut6"));
 
 // 设置点击事件
 document.getElementById("aqi").addEventListener("click", function () {
-  setHotMap(date, "AQI");
+  setHotMap(date, "AQI", current_province);
 });
 document.getElementById("donut1").addEventListener("click", function () {
-  setHotMap(date, "PM2.5");
+  setHotMap(date, "PM2.5", current_province);
 });
 document.getElementById("donut2").addEventListener("click", function () {
-  setHotMap(date, "PM10");
+  setHotMap(date, "PM10", current_province);
 });
 document.getElementById("donut3").addEventListener("click", function () {
-  setHotMap(date, "SO2");
+  setHotMap(date, "SO2", current_province);
 });
 document.getElementById("donut4").addEventListener("click", function () {
-  setHotMap(date, "NO2");
+  setHotMap(date, "NO2", current_province);
 });
 document.getElementById("donut5").addEventListener("click", function () {
-  setHotMap(date, "CO");
+  setHotMap(date, "CO", current_province);
 });
 document.getElementById("donut6").addEventListener("click", function () {
-  setHotMap(date, "O3");
+  setHotMap(date, "O3", current_province);
 });
 
 donutChart1.setOption(option);

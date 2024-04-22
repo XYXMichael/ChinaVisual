@@ -1,5 +1,5 @@
-var standard = 8;
-var standardValue = {
+let standard = 8;
+let standardValue = {
   "PM2.5": 7,
   PM10: 15,
   SO2: 15,
@@ -9,11 +9,11 @@ var standardValue = {
   AQI: 15,
 };
 // 地图变量
-var heatmapChart;
+let heatmapChart;
 // y轴排序
-var sortedKeys;
-var parentWidth = document.getElementById("heatmap").offsetWidth;
-var height_one = ((0.55 * parentWidth) / 12) * 33;
+let sortedKeys;
+let parentWidth = document.getElementById("heatmap").offsetWidth;
+let height_one = ((0.55 * parentWidth) / 12) * 33;
 
 function getValueColor(value, minValue, maxValue) {
   // 将值从给定范围归一化到 0 到 1 之间
@@ -26,7 +26,7 @@ function getValueColor(value, minValue, maxValue) {
   return `rgb(${red}, ${green}, ${blue})`;
 }
 
-var heatmapOption = {
+let heatmapOption = {
   title: {
     show: false,
   },
@@ -200,9 +200,7 @@ var heatmapOption = {
           var categoryIndex = api.value(i);
           // 这里使用 api.coord(...) 将数值在当前坐标系中转换成为屏幕上的点的像素值。
           var startPoint = api.coord([i, params.dataIndex]);
-          var endPoint = api.coord([i + 1, params.dataIndex]);
 
-          var height = api.size([0, 1])[1];
           var width = api.size([0, 1])[0];
 
           var kk = parseInt(categoryIndex / standard) + 5;
@@ -230,10 +228,9 @@ var heatmapOption = {
               updateAnimation: {
                 duration: 500,
                 easing: "quarticIn",
-                // delay: 200
               },
               animation: {
-                duration: 1000,
+                duration: 300,
                 easing: "quarticIn",
               },
               transition: "all",
@@ -264,12 +261,11 @@ var heatmapOption = {
       itemStyle: {
         normal: {
           color: function (params) {
-            // console.log(params)
-            if (params.dataIndex < 8) {
+            if (params.data < 75) {
               return "rgba(0, 128, 0, 0.5)"; // shallow green
-            } else if (params.dataIndex <= 15) {
+            } else if (params.data <= 100) {
               return "rgba(255, 255, 0, 0.5)"; // shallow yellow
-            } else if (params.dataIndex <= 25) {
+            } else if (params.data <= 200) {
               return "rgba(255, 165, 0, 0.5)"; // orange
             } else {
               return "rgba(255, 0, 0, 0.5)"; // shallow red
@@ -286,24 +282,50 @@ heatmapChart = echarts.init(document.getElementById("heatmap"), null, {
 });
 heatmapChart.setOption(heatmapOption);
 
-// 设置地图
-function setHotMap(date, type) {
-  getAverageData_Province_month(date.slice(0, 4), type).then((result) => {
-    standard = standardValue[type];
-
-    result.sort((a, b) => {
-      const nameA = a.name;
-      const nameB = b.name;
-      if (sortedKeys.indexOf(nameA) < sortedKeys.indexOf(nameB)) return -1;
-      else if (sortedKeys.indexOf(nameA) > sortedKeys.indexOf(nameB)) return 1;
-      return 0;
-    });
-    heatmapChart.setOption({
-      series: {
-        data: result,
-      },
-    });
+// 设置线圈图
+function setHotMap(date, type, province = null) {
+  heatmapChart.setOption({
+    series: {
+      data: [],
+    },
   });
+  if (!is_province) {
+    getAverageData_Province_month(date.slice(0, 4), type).then((result) => {
+      standard = standardValue[type];
+
+      result.sort((a, b) => {
+        const nameA = a.name;
+        const nameB = b.name;
+        if (sortedKeys.indexOf(nameA) < sortedKeys.indexOf(nameB)) return -1;
+        else if (sortedKeys.indexOf(nameA) > sortedKeys.indexOf(nameB))
+          return 1;
+        return 0;
+      });
+      heatmapChart.setOption({
+        series: {
+          data: result,
+        },
+      });
+    });
+  } else {
+    get_city_month(province, date.slice(0, 4), type).then((result) => {
+      standard = standardValue[type];
+
+      result.sort((a, b) => {
+        const nameA = a.name;
+        const nameB = b.name;
+        if (sortedKeys.indexOf(nameA) < sortedKeys.indexOf(nameB)) return -1;
+        else if (sortedKeys.indexOf(nameA) > sortedKeys.indexOf(nameB))
+          return 1;
+        return 0;
+      });
+      heatmapChart.setOption({
+        series: {
+          data: result,
+        },
+      });
+    });
+  }
 }
 
 async function setBarChart(date) {
@@ -342,13 +364,7 @@ async function setBarChart(date) {
 async function setTogether(date, type) {
   result1 = await getAverageData_Province_month(date.slice(0, 4), type);
   result2 = await getOneAverageData_province_day(date, "AQI");
-
-  console.log(result1);
-  console.log(result2);
-  var parentWidth = document.getElementById("heatmap").offsetWidth;
   height_one = ((0.55 * parentWidth) / 12) * 33;
-  heatmapChart.getDom().style.height = height_one + "px";
-  heatmapChart.resize();
 
   standard = standardValue[type];
   const keys = Object.keys(result2);
@@ -363,6 +379,7 @@ async function setTogether(date, type) {
     else if (sortedKeys.indexOf(nameA) > sortedKeys.indexOf(nameB)) return 1;
     return 0;
   });
+
   heatmapChart.setOption({
     grid: [
       {
@@ -393,9 +410,7 @@ async function setProvinceTogether(province, date, type) {
   result1 = await get_city_month(province, date.slice(0, 4), type);
   result2 = await get_city_average_daily(province, date, "AQI");
 
-  height_one = ((0.55 * parentWidth) / 12) * result1.length;
-  heatmapChart.getDom().style.height = height_one + "px";
-  heatmapChart.resize();
+  height_one = ((0.55 * parentWidth) / 12) * (result1.length + 1);
 
   standard = standardValue[type];
   const keys = Object.keys(result2);

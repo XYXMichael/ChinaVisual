@@ -15,7 +15,7 @@
 /* 中屏幕（>= 992px 且 < 1200px） */
 @media (min-width: 1400px) and (max-width: 2000px) {
     html {
-        font-size: 12px;
+        font-size: 16px;
     }
 }
 

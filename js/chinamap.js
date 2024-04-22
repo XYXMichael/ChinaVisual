@@ -1,11 +1,5 @@
-let flag = 1;
 var chinaMap = echarts.init(document.getElementById("box2"));
-var pName = "";
-var temIndex = 0;
-let temattr = "TEMP";
-let currentDate = "2013-01-01";
-let tempro = "上海";
-
+let temIndex = 0;
 
 var option_map = {
   backgroundColor: "#404a59",
@@ -188,43 +182,6 @@ const option_diff = {
   },
 };
 
-const provinceToEnglish = {
-  北京: "beijing",
-  天津: "tianjin",
-  河北: "hebei",
-  山西: "shanxi",
-  内蒙古: "inner mongolia",
-  辽宁: "liaoning",
-  吉林: "jilin",
-  黑龙江: "heilongjiang",
-  上海: "shanghai",
-  江苏: "jiangsu",
-  浙江: "zhejiang",
-  安徽: "anhui",
-  福建: "fujian",
-  江西: "jiangxi",
-  山东: "shandong",
-  河南: "henan",
-  湖北: "hubei",
-  湖南: "hunan",
-  广东: "guangdong",
-  广西: "guangxi",
-  海南: "hainan",
-  重庆: "chongqing",
-  四川: "sichuan",
-  贵州: "guizhou",
-  云南: "yunnan",
-  西藏: "tibet",
-  陕西: "shaanxi",
-  甘肃: "gansu",
-  青海: "qinghai",
-  宁夏: "ningxia",
-  新疆: "xinjiang",
-  香港: "hongkong",
-  澳门: "aomen",
-  台湾: "taiwan",
-};
-
 // 初始化全国地图，这里是异步！！！所以不能直接在这里加载地图
 fetch("china.json")
   .then((response) => response.json())
@@ -237,7 +194,7 @@ function drawProvinceMap(province_name, attr) {
   Promise.all([
     fetch(`province_map/${province_name}.json`).then((res) => res.json()),
     fetch(
-      `data/origin/CN-Reanalysis-daily-${currentDate
+      `data/origin/CN-Reanalysis-daily-${current_date
         .replace("-", "")
         .replace("-", "")}00.csv`
     ).then((response) => response.text()),
@@ -269,17 +226,19 @@ function drawProvinceMap(province_name, attr) {
     chinaMap.setOption(option_map);
 
     chinaMap.on("click", function (item) {
-      pName = item.name;
-      setControllor(currentDate, pName);
+      current_city = item.name;
+      setControllor(current_date, current_city);
     });
+
+    chinaMap.off("dblclick");
   });
 }
 
 function drawMap(attr, date) {
   if (attr == null) {
-    attr = temattr;
+    attr = current_attr;
   }
-  currentDate = date;
+  current_date = date;
   fetch(
     `data/origin/CN-Reanalysis-daily-${date
       .replace("-", "")
@@ -313,17 +272,24 @@ function drawMap(attr, date) {
        * 设置地图省份下钻点击事件
        */
       chinaMap.on("dblclick", function (item) {
-        flag = 0;
-        pName = item.name;
-        tempro = item.name;
-        drawProvinceMap(pName, attr, temIndex);
-        setProvinceTogether(provinceSimp2All[pName],"2013-01-01","AQI")
-        
+        is_province = true;
+
+        current_province_abbr = item.name;
+
+        drawProvinceMap(current_province_abbr, attr, temIndex);
+        setProvinceTogether(
+          provinceSimp2All[current_province_abbr],
+          "2013-01-01",
+          "AQI"
+        );
+        current_city =
+          province2Capitals[provinceSimp2All[current_province_abbr]];
+        setControllor(date, current_city);
       });
 
       chinaMap.on("click", function (item) {
-        pName = item.name;
-        setControllor(currentDate, pName);
+        current_province_abbr = item.name;
+        setControllor(current_date, current_province_abbr);
       });
     });
 }
@@ -344,21 +310,21 @@ const buttonMapping = {
 
 Object.keys(buttonMapping).forEach((key) => {
   document.getElementById(key).addEventListener("click", function () {
-    if (flag == 1) {
-      drawMap(buttonMapping[key], currentDate);
-      temattr = buttonMapping[key];
+    if (is_province == 0) {
+      drawMap(buttonMapping[key], current_date);
+      current_attr = buttonMapping[key];
     } else {
-      drawProvinceMap(tempro, buttonMapping[key]);
-      temattr = buttonMapping[key];
+      drawProvinceMap(current_province_abbr, buttonMapping[key]);
+      current_attr = buttonMapping[key];
     }
   });
 });
 
 document.getElementById("change").addEventListener("click", function () {
-  if (flag == 0) {
-    flag = 1;
-    drawMap(temattr, date);
-    setTogether(currentDate,tempro)
-
+  if (is_province == true) {
+    is_province = false;
+    drawMap(current_attr, date);
+    setTogether(current_date, "AQI");
+    setControllor(date, current_province_abbr);
   }
 });
