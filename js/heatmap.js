@@ -343,6 +343,60 @@ async function setTogether(date, type) {
   result1 = await getAverageData_Province_month(date.slice(0, 4), type);
   result2 = await getOneAverageData_province_day(date, "AQI");
 
+  console.log(result1);
+  console.log(result2);
+  var parentWidth = document.getElementById("heatmap").offsetWidth;
+  height_one = ((0.55 * parentWidth) / 12) * 33;
+  heatmapChart.getDom().style.height = height_one + "px";
+  heatmapChart.resize();
+
+  standard = standardValue[type];
+  const keys = Object.keys(result2);
+  sortedKeys = keys.slice().sort((a, b) => result2[a] - result2[b]);
+  const values = keys.map((key) => result2[key]);
+  values.sort((a, b) => a - b);
+
+  result1.sort((a, b) => {
+    const nameA = a.name;
+    const nameB = b.name;
+    if (sortedKeys.indexOf(nameA) < sortedKeys.indexOf(nameB)) return -1;
+    else if (sortedKeys.indexOf(nameA) > sortedKeys.indexOf(nameB)) return 1;
+    return 0;
+  });
+  heatmapChart.setOption({
+    grid: [
+      {
+        height: height_one,
+      },
+      {
+        height: height_one,
+      },
+    ],
+    yAxis: [
+      {
+        data: sortedKeys,
+      },
+      {
+        data: sortedKeys,
+      },
+    ],
+    series: [
+      { data: result1 },
+      {
+        data: values,
+      },
+    ],
+  });
+}
+
+async function setProvinceTogether(province, date, type) {
+  result1 = await get_city_month(province, date.slice(0, 4), type);
+  result2 = await get_city_average_daily(province, date, "AQI");
+
+  height_one = ((0.55 * parentWidth) / 12) * result1.length;
+  heatmapChart.getDom().style.height = height_one + "px";
+  heatmapChart.resize();
+
   standard = standardValue[type];
   const keys = Object.keys(result2);
   sortedKeys = keys.slice().sort((a, b) => result2[a] - result2[b]);

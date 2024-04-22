@@ -1,12 +1,12 @@
-var tempData = [];
 let flag = 1;
 var chinaMap = echarts.init(document.getElementById("box2"));
 var pName = "";
 var temIndex = 0;
-let tempdata = [];
 let temattr = "TEMP";
 let currentDate = "2013-01-01";
-let tempro = "上海"
+let tempro = "上海";
+
+
 var option_map = {
   backgroundColor: "#404a59",
   title: {
@@ -16,8 +16,7 @@ var option_map = {
     textStyle: {
       fontSize: 18,
       color: "#fff", // 设置标题文字颜色为白色
-      fontSize:'3rem'
-
+      fontSize: "3rem",
     },
   },
   geo: {
@@ -31,13 +30,12 @@ var option_map = {
       borderColor: "#0a0a0a", // 边界线条颜色
       borderWidth: 1, // 边界线条宽度
     },
-    zoom: 1.2,
-    scaleLimit:{
-      max:2,
-      min:0.5
-  },
-  roam:true
-
+    zoom: 1,
+    scaleLimit: {
+      max: 2,
+      min: 0.5,
+    },
+    roam: false,
   },
   visualMap: {
     min: 0,
@@ -48,27 +46,19 @@ var option_map = {
     top: "bottom",
     inRange: {
       color: ["#f7fcf0", "#e0f3db", "#ccebc5", "#a8ddb5", "#7bccc4"],
-      colorAlpha:0.9
+      colorAlpha: 0.9,
     },
-    precision:2,
-
+    precision: 2,
   },
   series: [
     {
       type: "heatmap",
       coordinateSystem: "geo",
-      roam: true, // 允许缩放和平移漫游
-      // 设置缩放的比例
-      zoom: 2,
-      // 设置缩放的限制
-      scaleLimit: {
-        min: 1,
-        max: 10,
-      },
+      zoom: 1,
       data: [],
       pointSize: 1,
       blurSize: 4,
-      minOpacity:0.3
+      minOpacity: 0.3,
     },
   ],
 };
@@ -78,19 +68,18 @@ const option_diff = {
     name: "PM2.5",
     index: 0,
     color: [
-      '#ffffff',
+      "#ffffff",
       "#b499d4",
       "#a766c0",
       "#7a33b0",
       "#6000ae",
       "#400090",
       "#200070",
-
     ],
     min: -2,
     max: 350,
   },
-  "PM10": {
+  PM10: {
     name: "PM10",
     index: 1,
     color: [
@@ -101,13 +90,12 @@ const option_diff = {
       "#fee725",
       "#fec325",
       "#fea925",
-      "#fe5825"
-
+      "#fe5825",
     ],
     min: -10,
     max: 350,
   },
-  "SO2": {
+  SO2: {
     name: "SO2",
     index: 2,
     color: [
@@ -122,7 +110,7 @@ const option_diff = {
     min: -10,
     max: 200,
   },
-  "NO2": {
+  NO2: {
     name: "NO2",
     index: 3,
     color: [
@@ -139,7 +127,7 @@ const option_diff = {
     min: -1,
     max: 180,
   },
-  "CO": {
+  CO: {
     name: "CO",
     index: 4,
     color: [
@@ -154,36 +142,21 @@ const option_diff = {
     min: -0.5,
     max: 16,
   },
-  "O3": {
+  O3: {
     name: "O3",
     index: 5,
-    color: [
-      "#ffffff",
-      "#e3f7e4",
-      "#c6eec9",
-      "#aae6ae",
-      "#8edd93",
-      "#71d578",
-
-    ],
+    color: ["#ffffff", "#e3f7e4", "#c6eec9", "#aae6ae", "#8edd93", "#71d578"],
     min: 0,
     max: 215,
   },
-  "TEMP": {
+  TEMP: {
     name: "TEMP",
-    index: 8 ,
-    color: [
-      "#313695",
-      "#4575b4",
-      "#74add1",
-      "#abd9e9",
-      "#fdae61",
-      "#f46d43",
-    ],
+    index: 8,
+    color: ["#313695", "#4575b4", "#74add1", "#abd9e9", "#fdae61", "#f46d43"],
     min: 230,
     max: 320,
   },
-  "RH": {
+  RH: {
     name: "RH",
     index: 9,
     color: [
@@ -199,35 +172,21 @@ const option_diff = {
     min: 0,
     max: 100,
   },
-  "PSFC": {
+  PSFC: {
     name: "PSFC",
     index: 10,
-    color: [
-      "#b9ffdd",
-      "#a0e9bb",
-      "#86d4aa",
-      "#7dbe66",
-      "#53a944",
-      "#2a9322",
-    ],
+    color: ["#b9ffdd", "#a0e9bb", "#86d4aa", "#7dbe66", "#53a944", "#2a9322"],
     min: 35000,
     max: 110000,
   },
-  "AQI": {
+  AQI: {
     name: "AQI",
     index: 17,
-    color: [
-      "#daffd9",
-      "#8ceaa7",
-      "#94c153",
-      "#f0ad51",
-      "#ff5b48",
-      "#ff3646",
-    ],
+    color: ["#daffd9", "#8ceaa7", "#94c153", "#f0ad51", "#ff5b48", "#ff3646"],
     min: 0,
     max: 300,
   },
-}
+};
 
 const provinceToEnglish = {
   北京: "beijing",
@@ -265,20 +224,23 @@ const provinceToEnglish = {
   澳门: "aomen",
   台湾: "taiwan",
 };
-// 初始化全国地图，这里是异步！！！所以不能直接在这里加载地图
-fetch("china.json").then((response) => response.json()).then((data) => {
-  echarts.registerMap("china", data); // 注册地图数据
-  drawMap("TEMP", "2013-01-01");
 
-})
+// 初始化全国地图，这里是异步！！！所以不能直接在这里加载地图
+fetch("china.json")
+  .then((response) => response.json())
+  .then((data) => {
+    echarts.registerMap("china", data); // 注册地图数据
+    drawMap("TEMP", "2013-01-01");
+  });
 
 function drawProvinceMap(province_name, attr) {
-
   Promise.all([
     fetch(`province_map/${province_name}.json`).then((res) => res.json()),
-    fetch(`data/origin/CN-Reanalysis-daily-${currentDate.replace('-', '').replace('-', '')}00.csv`).then((response) =>
-      response.text()
-    ),
+    fetch(
+      `data/origin/CN-Reanalysis-daily-${currentDate
+        .replace("-", "")
+        .replace("-", "")}00.csv`
+    ).then((response) => response.text()),
   ]).then(([provinceGeoJson, csvData]) => {
     var rows = csvData.split("\n");
     var provinceData = [];
@@ -296,73 +258,75 @@ function drawProvinceMap(province_name, attr) {
     }
 
     echarts.registerMap(provinceToEnglish[province_name], provinceGeoJson); // 注册地图数据
-    option_map.series[0].blurSize = 10
-    option_map.series[0].pointSize = 5
-    option_map.series[0].data = provinceData
-    option_map.title.text = attr
-    option_map.geo.map = provinceToEnglish[province_name]
+    option_map.series[0].blurSize = 5;
+    option_map.series[0].pointSize = 8;
+    option_map.series[0].data = provinceData;
+    option_map.title.text = attr;
+    option_map.geo.map = provinceToEnglish[province_name];
     option_map.visualMap.min = option_diff[attr].min;
     option_map.visualMap.max = option_diff[attr].max;
     option_map.visualMap.inRange.color = option_diff[attr].color;
     chinaMap.setOption(option_map);
 
     chinaMap.on("click", function (item) {
-      console.log(item)
       pName = item.name;
-      console.log(pName)
-
       setControllor(currentDate, pName);
     });
   });
 }
 
 function drawMap(attr, date) {
-  if(attr == null){
-    attr = temattr
+  if (attr == null) {
+    attr = temattr;
   }
-  currentDate = date
-  fetch(`data/origin/CN-Reanalysis-daily-${date.replace('-', '').replace('-', '')}00.csv`).then((response) =>
-    response.text()
-  ).then((csvData) => {
-    let data = [];
-    let index = option_diff[attr].index;
-    let temIndex = option_diff[attr].temIndex;
-    var rows = csvData.split("\n");
-    for (var i = 1; i < rows.length; i++) {
-      var row = rows[i].split(",");
-      data.push([
-        parseFloat(row[12]), // longitude
-        parseFloat(row[11]), // latitude
-        parseFloat(row[index]), // temperature
-      ]);
-    }
-    // 绘制地图
-    option_map.series[0].data = data;
-    option_map.series[0].blurSize = 3
-    option_map.series[0].pointSize = 1.6
-    option_map.title.text = attr
-    option_map.visualMap.inRange.color = option_diff[attr].color
-    option_map.visualMap.min = option_diff[attr].min;
-    option_map.visualMap.max = option_diff[attr].max;
-    option_map.geo.map = "china"
-    chinaMap.setOption(option_map);
-    /**
-     * 设置地图省份下钻点击事件
-     */
-    chinaMap.on("dblclick", function (item) {
-      flag = 0;
-      pName = item.name;
-      tempro = item.name
-      drawProvinceMap(pName, attr, temIndex);point
-    });
+  currentDate = date;
+  fetch(
+    `data/origin/CN-Reanalysis-daily-${date
+      .replace("-", "")
+      .replace("-", "")}00.csv`
+  )
+    .then((response) => response.text())
+    .then((csvData) => {
+      let data = [];
+      let index = option_diff[attr].index;
+      let temIndex = option_diff[attr].temIndex;
+      var rows = csvData.split("\n");
+      for (var i = 1; i < rows.length; i++) {
+        var row = rows[i].split(",");
+        data.push([
+          parseFloat(row[12]), // longitude
+          parseFloat(row[11]), // latitude
+          parseFloat(row[index]), // temperature
+        ]);
+      }
+      // 绘制地图
+      option_map.series[0].data = data;
+      option_map.series[0].blurSize = 3;
+      option_map.series[0].pointSize = 1.6;
+      option_map.title.text = attr;
+      option_map.visualMap.inRange.color = option_diff[attr].color;
+      option_map.visualMap.min = option_diff[attr].min;
+      option_map.visualMap.max = option_diff[attr].max;
+      option_map.geo.map = "china";
+      chinaMap.setOption(option_map);
+      /**
+       * 设置地图省份下钻点击事件
+       */
+      chinaMap.on("dblclick", function (item) {
+        flag = 0;
+        pName = item.name;
+        tempro = item.name;
+        drawProvinceMap(pName, attr, temIndex);
+        setProvinceTogether(provinceSimp2All[pName],"2013-01-01","AQI")
+        
+      });
 
-    chinaMap.on("click", function (item) {
-      pName = item.name;
-      setControllor(currentDate, pName);
+      chinaMap.on("click", function (item) {
+        pName = item.name;
+        setControllor(currentDate, pName);
+      });
     });
-  });
 }
-
 
 const buttonMapping = {
   temperature: "TEMP",
@@ -394,6 +358,7 @@ document.getElementById("change").addEventListener("click", function () {
   if (flag == 0) {
     flag = 1;
     drawMap(temattr, date);
+    setTogether(currentDate,tempro)
+
   }
 });
-
