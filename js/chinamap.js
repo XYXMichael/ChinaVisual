@@ -1,6 +1,29 @@
 var chinaMap = echarts.init(document.getElementById("box2"));
 let temIndex = 0;
 
+function getPointSize(value) {
+  console.log("PointSize", value);
+  if (value > 40000) return 1;
+  else if (value > 10000) return 3;
+  else if (value > 5000) return 3;
+  else if (value > 2000) return 5;
+  else if (value > 1000) return 6;
+  else if (value > 500) return 9;
+  else if (value > 200) return 6;
+  else if (value > 100) return 2;
+}
+function getBlurSize(value) {
+  console.log("BlurSize", value);
+  if (value > 40000) return 4;
+  else if (value > 10000) return 3;
+  else if (value > 5000) return 2;
+  else if (value > 2000) return 4;
+  else if (value > 1000) return 4;
+  else if (value > 500) return 4;
+  else if (value > 200) return 4;
+  else if (value > 100) return 2;
+}
+
 var option_map = {
   backgroundColor: "#404a59",
   title: {
@@ -215,8 +238,8 @@ function drawProvinceMap(province_name, attr) {
     }
 
     echarts.registerMap(provinceToEnglish[province_name], provinceGeoJson); // 注册地图数据
-    option_map.series[0].blurSize = 5;
-    option_map.series[0].pointSize = 8;
+    option_map.series[0].blurSize = getBlurSize(provinceData.length);
+    option_map.series[0].pointSize = getPointSize(provinceData.length);
     option_map.series[0].data = provinceData;
     option_map.title.text = attr;
     option_map.geo.map = provinceToEnglish[province_name];
@@ -224,13 +247,13 @@ function drawProvinceMap(province_name, attr) {
     option_map.visualMap.max = option_diff[attr].max;
     option_map.visualMap.inRange.color = option_diff[attr].color;
     chinaMap.setOption(option_map);
+    chinaMap.off("click");
+    chinaMap.off("dblclick");
 
     chinaMap.on("click", function (item) {
       current_city = item.name;
       setControllor(current_date, current_city);
     });
-
-    chinaMap.off("dblclick");
   });
 }
 
@@ -258,10 +281,11 @@ function drawMap(attr, date) {
           parseFloat(row[index]), // temperature
         ]);
       }
+      console.log(data.length);
       // 绘制地图
       option_map.series[0].data = data;
-      option_map.series[0].blurSize = 3;
-      option_map.series[0].pointSize = 1.6;
+      option_map.series[0].blurSize = getBlurSize(data.length);
+      option_map.series[0].pointSize = getPointSize(data.length);
       option_map.title.text = attr;
       option_map.visualMap.inRange.color = option_diff[attr].color;
       option_map.visualMap.min = option_diff[attr].min;
@@ -271,11 +295,10 @@ function drawMap(attr, date) {
       /**
        * 设置地图省份下钻点击事件
        */
+
       chinaMap.on("dblclick", function (item) {
         is_province = true;
-
         current_province_abbr = item.name;
-
         drawProvinceMap(current_province_abbr, attr, temIndex);
         setProvinceTogether(
           provinceSimp2All[current_province_abbr],
@@ -314,6 +337,7 @@ Object.keys(buttonMapping).forEach((key) => {
       drawMap(buttonMapping[key], current_date);
       current_attr = buttonMapping[key];
     } else {
+      console.log(current_province_abbr);
       drawProvinceMap(current_province_abbr, buttonMapping[key]);
       current_attr = buttonMapping[key];
     }

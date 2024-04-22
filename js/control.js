@@ -331,6 +331,12 @@ function updateControl(data) {
 
 function setControllor(date1, name) {
   date = date1;
+  const textElement = document.getElementById("province");
+  if (name.length > 6) {
+    textElement.classList.add("long");
+  } else {
+    textElement.classList.remove("long");
+  }
   if (name in provinceSimp2All) {
     current_province = provinceSimp2All[name];
     getAverageData_Province_day(date1, current_province).then((row) => {
