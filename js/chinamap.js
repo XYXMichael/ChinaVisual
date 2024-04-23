@@ -6,9 +6,11 @@ function getPointSize(value) {
   if (value > 40000) return 1;
   else if (value > 10000) return 3;
   else if (value > 5000) return 3;
+  else if (value > 3000) return 4;
   else if (value > 2000) return 5;
-  else if (value > 1000) return 6;
-  else if (value > 500) return 9;
+  else if (value > 1000) return 7;
+  else if (value > 500) return 8;
+  else if (value > 400) return 9;
   else if (value > 200) return 6;
   else if (value > 100) return 2;
 }
@@ -16,10 +18,12 @@ function getBlurSize(value) {
   console.log("BlurSize", value);
   if (value > 40000) return 4;
   else if (value > 10000) return 3;
-  else if (value > 5000) return 2;
-  else if (value > 2000) return 4;
-  else if (value > 1000) return 4;
+  else if (value > 5000) return 5;
+  else if (value > 3000) return 5;
+  else if (value > 2000) return 5;
+  else if (value > 1000) return 5;
   else if (value > 500) return 4;
+  else if (value > 400) return 6;
   else if (value > 200) return 4;
   else if (value > 100) return 2;
 }
@@ -75,7 +79,8 @@ var option_map = {
       data: [],
       pointSize: 1,
       blurSize: 4,
-      minOpacity: 0.3,
+      minOpacity: 0.1,
+      maxOpacity: 0.8,
     },
   ],
 };
