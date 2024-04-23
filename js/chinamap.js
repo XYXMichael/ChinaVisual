@@ -313,6 +313,7 @@ function drawMap(attr, date) {
       chinaMap.on("click", function (item) {
         current_province_abbr = item.name;
         setControllor(current_date, current_province_abbr);
+        setStackChart(current_province_abbr);
       });
     });
 }

@@ -85,6 +85,13 @@ body {
     max-height: 450px;
     /* 允许垂直方向滑动 */
 }
+#cell3 {
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 3;
+    grid-row-end: 4;
+    width: 100%;
+}
 
 #box2 {
     width: 100%;
