@@ -1,11 +1,6 @@
 var chartDom = document.getElementById('heatChart');
 var heatChart = echarts.init(chartDom);
 
-// prettier-ignore
-
-// prettier-ignore
-
-
 var heatChart_option = {
     tooltip: {
         position: 'top'

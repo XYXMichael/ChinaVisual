@@ -12,13 +12,13 @@ document.getElementById("date_title").addEventListener("change", function () {
   if (is_province) {
     setControllor(date, current_province);
     setProvinceTogether(current_province, date, "AQI");
-    // console.log(current_city);
     drawProvinceMap(current_city, "AQI");
   } else {
     setControllor(date, province_name);
     setTogether(date, "AQI");
     drawMap(null, date);
   }
+  setheatChart(current_province, "AQI")
 });
 
 // 设置圆环图配置

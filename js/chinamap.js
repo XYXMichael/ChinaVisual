@@ -243,7 +243,6 @@ function drawProvinceMap(province_name, attr) {
         ]);
       }
     }
-    console.log(provinceData)
     echarts.registerMap(provinceToEnglish[province_name], provinceGeoJson); // 注册地图数据
     option_map.series[0].blurSize = getBlurSize(provinceData.length);
     option_map.series[0].pointSize = getPointSize(provinceData.length);
@@ -253,11 +252,9 @@ function drawProvinceMap(province_name, attr) {
     option_map.visualMap.min = option_diff[attr].min;
     option_map.visualMap.max = option_diff[attr].max;
     option_map.visualMap.inRange.color = option_diff[attr].color;
-    console.log(option_map)
     chinaMap.setOption(option_map);
     chinaMap.off("click");
     chinaMap.off("dblclick");
-
     chinaMap.on("click", function (item) {
       current_city = item.name;
       setControllor(current_date, current_city);
@@ -324,7 +321,6 @@ function drawMap(attr, date) {
         setControllor(current_date, current_province_abbr);
         setStackChart(current_province_abbr);
         setheatChart(current_province, "AQI")
-
       });
     });
 }

@@ -181,65 +181,60 @@ let heatmapOption = {
       type: "custom",
       data: [],
       renderItem: function (params, api) {
-        var group = [];
-        for (i = 0; i < 12; i++) {
-          var item = [];
-          var categoryIndex = api.value(i);
-          // 这里使用 api.coord(...) 将数值在当前坐标系中转换成为屏幕上的点的像素值。
-          var startPoint = api.coord([i, params.dataIndex]);
 
-          var width = api.size([0, 1])[0];
+        var item = [];
+        var categoryIndex = api.value(0);
+        var valueIndex = api.value(1);
+        var value = api.value(2)
 
-          var kk = parseInt(categoryIndex / standard) + 5;
-          var rgb = getValueColor(kk, 5, 18);
-          for (j = 0; j < kk; j++) {
-            item.push({
-              type: "line",
-              rotation: (2 * j * Math.PI) / kk,
-              originX: startPoint[0],
-              originY: startPoint[1],
-              shape: {
-                x1: startPoint[0],
-                y1: startPoint[1],
-                x2: startPoint[0] + (width / 2 - 2),
-                y2: startPoint[1],
-              },
-              style: {
-                stroke: rgb,
-                fill: rgb,
-                lineWidth: 2,
-              },
-              enterFrom: {
-                style: { opacity: 0 },
-              },
-              updateAnimation: {
-                duration: 500,
-                easing: "quarticIn",
-              },
-              animation: {
-                duration: 300,
-                easing: "quarticIn",
-              },
-              transition: "all",
-            });
-          }
-          group.push({
-            type: "group",
-            children: item,
-            silent: false,
 
+
+        var startPoint = api.coord([valueIndex, categoryIndex]);
+        var width = api.size([0, 1])[0];
+
+        var kk = parseInt(value / standard) + 5;
+        var rgb = getValueColor(kk, 5, 18);
+        for (j = 0; j < kk; j++) {
+          item.push({
+            type: "line",
+            rotation: (2 * j * Math.PI) / kk,
+            originX: startPoint[0],
+            originY: startPoint[1],
+            shape: {
+              x1: startPoint[0],
+              y1: startPoint[1],
+              x2: startPoint[0] + (width / 2 - 2),
+              y2: startPoint[1],
+            },
+            style: {
+              stroke: rgb,
+              fill: rgb,
+              lineWidth: 2,
+            },
+            enterFrom: {
+              style: { opacity: 0 },
+            },
+            updateAnimation: {
+              duration: 500,
+              easing: "quarticIn",
+            },
+            animation: {
+              duration: 300,
+              easing: "quarticIn",
+            },
+            transition: "all",
           });
         }
         return {
           type: "group",
-          children: group,
+          children: item,
           silent: false,
         };
       },
       tooltip: {
         position: "bottom",
         formatter: function (params) {
-          return date.slice(0, 4) + "年 " + params.name + " " + current_attr + "：<br/>" + params.value;
+          return date.slice(0, 4) + "年" + months[params.value[1]] + " " + params.value[3] + " " + current_attr + " ：" + params.value[2];
         },
       },
     },
@@ -297,9 +292,15 @@ function setHotMap(date, type, province = null) {
           return 1;
         return 0;
       });
+      const transformedData = result.map((row, rowIndex) => {
+        return row.value.map((value, columnIndex) => {
+          return [rowIndex, columnIndex, value, row.name];
+        });
+      }).flat();
+      console.log(transformedData)
       heatmapChart.setOption({
         series: {
-          data: result,
+          data: transformedData,
         },
       });
     });
@@ -315,9 +316,15 @@ function setHotMap(date, type, province = null) {
           return 1;
         return 0;
       });
+      const transformedData = result.map((row, rowIndex) => {
+        return row.value.map((value, columnIndex) => {
+          return [rowIndex, columnIndex, value, row.name];
+        });
+      }).flat();
+      console.log(transformedData)
       heatmapChart.setOption({
         series: {
-          data: result,
+          data: transformedData,
         },
       });
     });
@@ -376,6 +383,13 @@ async function setTogether(date, type) {
     return 0;
   });
 
+  const transformedData = result1.map((row, rowIndex) => {
+    return row.value.map((value, columnIndex) => {
+      return [rowIndex, columnIndex, value, row.name];
+    });
+  }).flat();
+
+
   heatmapChart.setOption({
     grid: [
       {
@@ -394,11 +408,12 @@ async function setTogether(date, type) {
       },
     ],
     series: [
-      { data: result1 },
+      { data: transformedData },
       {
         data: values,
       },
     ],
+
   });
 }
 
@@ -421,6 +436,11 @@ async function setProvinceTogether(province, date, type) {
     else if (sortedKeys.indexOf(nameA) > sortedKeys.indexOf(nameB)) return 1;
     return 0;
   });
+  const transformedData = result1.map((row, rowIndex) => {
+    return row.value.map((value, columnIndex) => {
+      return [rowIndex, columnIndex, value, row.name];
+    });
+  }).flat();
   heatmapChart.setOption({
     grid: [
       {
@@ -439,7 +459,7 @@ async function setProvinceTogether(province, date, type) {
       },
     ],
     series: [
-      { data: result1 },
+      { data: transformedData },
       {
         data: values,
       },
