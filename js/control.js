@@ -94,12 +94,7 @@ var option = {
         formatter: "{value}",
         color: "inherit",
       },
-      data: [
-        {
-          value: 20,
-          name: "Grade Rating",
-        },
-      ],
+      data: []
     },
   ],
 };
@@ -114,6 +109,7 @@ let donutChart6 = echarts.init(document.getElementById("donut6"));
 
 // 设置点击事件
 document.getElementById("aqi").addEventListener("click", function () {
+  current_pollution = "AQI"
   setHotMap(date, "AQI", current_province);
 });
 document.getElementById("donut1").addEventListener("click", function () {
@@ -389,4 +385,3 @@ function setControllor(date1, name) {
   }
 }
 
-setControllor("2013-01-01", "上海");

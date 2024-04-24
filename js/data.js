@@ -69,6 +69,7 @@ async function get_city_month(province, year, type) {
 }
 
 get_city_month("北京市", "2013", "AQI");
+
 /**
  * 获取某一天某个省份的平均数据
  * @param {*} date 日期
@@ -79,7 +80,7 @@ async function getAverageData_Province_day(date, province) {
   const res = await fetch(`data/province_daily/${province}/${province}.csv`);
   const csvContent = await res.text();
   var rows = csvContent.split("\n");
-  var columns = rows[0].split(",");
+
   for (var i = 1; i < rows.length - 1; i++) {
     var row = rows[i];
     var columns = row.split(",");
@@ -88,6 +89,42 @@ async function getAverageData_Province_day(date, province) {
     }
   }
 }
+
+/**
+ * 获取某一年某个省份的某个指标的平均数据
+ * @param {*} date 日期
+ * @param {*} province 省
+ * @returns
+ */
+async function getTypeData_Province_year(province, year, type) {
+  const res = await fetch(`data/province_daily/${province}/${province}.csv`);
+  const csvContent = await res.text();
+  var rows = csvContent.split("\n");
+  var columns = rows[0].split(",");
+  let index = 0
+
+  for (let i = 0; i < columns.length; i++) {
+    if (type == columns[i]) {
+      index = i;
+    }
+  }
+  let data = []
+  for (var i = 1; i < rows.length - 1; i++) {
+    var row = rows[i];
+    var columns = row.split(",");
+    if (columns[1].slice(0, 4) === year) {
+      data.push([columns[1], columns[index]])
+    } else if (data.length != 0) {
+      break;
+    }
+
+  }
+  // console.log(data)
+  return data;
+
+}
+
+
 
 /**
  * 获取某一天某个省份的平均数据

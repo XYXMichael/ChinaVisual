@@ -12,6 +12,7 @@ function getPointSize(value) {
   else if (value > 400) return 9;
   else if (value > 200) return 6;
   else if (value > 100) return 2;
+  else return 24
 }
 function getBlurSize(value) {
   if (value > 40000) return 4;
@@ -24,6 +25,8 @@ function getBlurSize(value) {
   else if (value > 400) return 6;
   else if (value > 200) return 4;
   else if (value > 100) return 2;
+  else return 15
+
 }
 
 var option_map = {
@@ -213,10 +216,11 @@ fetch("china.json")
   .then((response) => response.json())
   .then((data) => {
     echarts.registerMap("china", data); // 注册地图数据
-    drawMap("TEMP", "2013-01-01");
+    drawMap(current_attr, current_date);
   });
 
 function drawProvinceMap(province_name, attr) {
+  console.log(province_name, attr)
   Promise.all([
     fetch(`province_map/${province_name}.json`).then((res) => res.json()),
     fetch(
@@ -239,7 +243,7 @@ function drawProvinceMap(province_name, attr) {
         ]);
       }
     }
-
+    console.log(provinceData)
     echarts.registerMap(provinceToEnglish[province_name], provinceGeoJson); // 注册地图数据
     option_map.series[0].blurSize = getBlurSize(provinceData.length);
     option_map.series[0].pointSize = getPointSize(provinceData.length);
@@ -249,6 +253,7 @@ function drawProvinceMap(province_name, attr) {
     option_map.visualMap.min = option_diff[attr].min;
     option_map.visualMap.max = option_diff[attr].max;
     option_map.visualMap.inRange.color = option_diff[attr].color;
+    console.log(option_map)
     chinaMap.setOption(option_map);
     chinaMap.off("click");
     chinaMap.off("dblclick");
@@ -306,7 +311,7 @@ function drawMap(attr, date) {
         drawProvinceMap(current_province_abbr, attr, temIndex);
         setProvinceTogether(
           provinceSimp2All[current_province_abbr],
-          "2013-01-01",
+          current_date,
           "AQI"
         );
         current_city =
@@ -318,6 +323,8 @@ function drawMap(attr, date) {
         current_province_abbr = item.name;
         setControllor(current_date, current_province_abbr);
         setStackChart(current_province_abbr);
+        setheatChart(current_province, "AQI")
+
       });
     });
 }

@@ -105,18 +105,44 @@ const province2Capitals = {
   浙江省: "杭州市",
   重庆市: "重庆市",
   内蒙古自治区: "呼和浩特市",
+  北京市: "朝阳区"
 };
+
+const days = [
+  '1号', '2号', '3号', '4号', '5号', '6号', '7号',
+  '8号', '9号', '10号', '11号', '12号',
+  '13号', '14号', '15号', '16号', '17号', '18号',
+  '19号', '20号', '21号', '22号', '23号', '24号',
+  '25号', '26号', '27号', '28号', '29号', '30号', '31号'
+];
+const months = [
+  "1月",
+  "2月",
+  "3月",
+  "4月",
+  "5月",
+  "6月",
+  "7月",
+  "8月",
+  "9月",
+  "10月",
+  "11月",
+  "12月",
+];
 
 var current_attr = "AQI";
 var current_date = "2013-01-01";
-var current_province = "广东省";
-var current_province_abbr = "广东";
-var current_city = "深圳市";
+var current_province = "北京市";
+var current_province_abbr = "北京";
+var current_city = "朝阳区";
 var is_province = false; // 是否为省份地图
+var current_pollution = "PM2.5";
 //省份缩写
 
 window.onload = function () {
+  setControllor(current_date, current_province_abbr);
+
   var maxHeight = document.getElementById("cell1").offsetHeight;
   document.getElementById("cell2").style.maxHeight = maxHeight + "px";
-  setTogether("2013-01-01", "AQI");
+  setTogether(current_date, current_attr);
 };
