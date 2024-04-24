@@ -320,7 +320,8 @@ function drawMap(attr, date) {
         current_province_abbr = item.name;
         setControllor(current_date, current_province_abbr);
         setStackChart(current_province_abbr);
-        setheatChart(current_province, "AQI")
+        setheatChart(current_province, "AQI");
+        setRadar(current_province_abbr, current_date);
       });
     });
 }
@@ -354,8 +355,10 @@ Object.keys(buttonMapping).forEach((key) => {
 document.getElementById("change").addEventListener("click", function () {
   if (is_province == true) {
     is_province = false;
+    setRadar(current_province_abbr, date)
     drawMap(current_attr, date);
     setTogether(current_date, current_attr);
     setControllor(date, current_province_abbr);
+    
   }
 });

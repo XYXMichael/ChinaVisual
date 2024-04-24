@@ -27,6 +27,7 @@ function getValueColor(value, minValue, maxValue) {
 }
 
 let heatmapOption = {
+  backgroundColor: "#404a59",
   title: {
     show: false,
   },
@@ -60,6 +61,7 @@ let heatmapOption = {
       axisLabel: {
         interval: 0,
         fontSize: "1rem",
+        color:"#fff"
       },
     },
     {
@@ -72,6 +74,7 @@ let heatmapOption = {
       axisLabel: {
         interval: 0,
         fontSize: "1rem",
+        color:"#fff"
       },
     },
   ],
@@ -171,8 +174,9 @@ let heatmapOption = {
       },
       axisLabel: {
         fontSize: "1rem",
-        align: "center",
-        margin: 75,
+        align: "left",
+        color: "#fff",
+        margin: 100,
       },
     },
   ],
