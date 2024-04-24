@@ -12,7 +12,7 @@ document.getElementById("date_title").addEventListener("change", function () {
   if (is_province) {
     setControllor(date, current_province);
     setProvinceTogether(current_province, date, "AQI");
-    console.log(current_city);
+    // console.log(current_city);
     drawProvinceMap(current_city, "AQI");
   } else {
     setControllor(date, province_name);
@@ -23,6 +23,10 @@ document.getElementById("date_title").addEventListener("change", function () {
 
 // 设置圆环图配置
 var option = {
+  tooltip: {
+    show: true,
+    trigger: 'item'
+  },
   series: [
     {
       type: "gauge",
@@ -42,6 +46,8 @@ var option = {
           var b = Math.floor(0 * (1 - ratio)); // 蓝色分量从204过渡到0
           return `rgb(${r}, ${g}, ${b})`;
         },
+      },
+      tooltip: {
       },
       progress: {
         show: true,
@@ -344,8 +350,8 @@ function setControllor(date1, name) {
       data.push(row[13] + " " + row[14]);
       data.push(
         calculateWindDirection(row[8], row[9]) +
-          "  " +
-          Math.sqrt(row[9] * row[9], row[8] * row[8])
+        "  " +
+        Math.sqrt(row[9] * row[9], row[8] * row[8])
       );
       data.push(row[10] - 272.15);
       data.push(row[11]);
@@ -365,8 +371,8 @@ function setControllor(date1, name) {
       data.push(row[14] + " " + row[15]);
       data.push(
         calculateWindDirection(row[10], row[9]) +
-          "  " +
-          Math.sqrt(row[9] * row[9], row[10] * row[10])
+        "  " +
+        Math.sqrt(row[9] * row[9], row[10] * row[10])
       );
       data.push(row[11] - 272.15);
       data.push(row[12]);

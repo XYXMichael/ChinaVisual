@@ -2,7 +2,6 @@ var chinaMap = echarts.init(document.getElementById("box2"));
 let temIndex = 0;
 
 function getPointSize(value) {
-  console.log("PointSize", value);
   if (value > 40000) return 1;
   else if (value > 10000) return 3;
   else if (value > 5000) return 3;
@@ -15,7 +14,6 @@ function getPointSize(value) {
   else if (value > 100) return 2;
 }
 function getBlurSize(value) {
-  console.log("BlurSize", value);
   if (value > 40000) return 4;
   else if (value > 10000) return 3;
   else if (value > 5000) return 5;
@@ -275,6 +273,7 @@ function drawMap(attr, date) {
     .then((response) => response.text())
     .then((csvData) => {
       let data = [];
+
       let index = option_diff[attr].index;
       let temIndex = option_diff[attr].temIndex;
       var rows = csvData.split("\n");
@@ -286,7 +285,7 @@ function drawMap(attr, date) {
           parseFloat(row[index]), // temperature
         ]);
       }
-      console.log(data.length);
+      // console.log(data.length);
       // 绘制地图
       option_map.series[0].data = data;
       option_map.series[0].blurSize = getBlurSize(data.length);
@@ -343,7 +342,6 @@ Object.keys(buttonMapping).forEach((key) => {
       drawMap(buttonMapping[key], current_date);
       current_attr = buttonMapping[key];
     } else {
-      console.log(current_province_abbr);
       drawProvinceMap(current_province_abbr, buttonMapping[key]);
       current_attr = buttonMapping[key];
     }
@@ -354,7 +352,7 @@ document.getElementById("change").addEventListener("click", function () {
   if (is_province == true) {
     is_province = false;
     drawMap(current_attr, date);
-    setTogether(current_date, "AQI");
+    setTogether(current_date, current_attr);
     setControllor(date, current_province_abbr);
   }
 });

@@ -30,6 +30,7 @@ let heatmapOption = {
   title: {
     show: false,
   },
+
   grid: [
     {
       width: "55%",
@@ -239,17 +240,20 @@ let heatmapOption = {
           group.push({
             type: "group",
             children: item,
+            silent: false,
+
           });
         }
         return {
           type: "group",
           children: group,
+          silent: false,
         };
       },
       tooltip: {
         position: "bottom",
         formatter: function (params) {
-          return params.name + ":<br/>" + params.value;
+          return date.slice(0, 4) + "年 " + params.name + " " + current_attr + "：<br/>" + params.value;
         },
       },
     },
@@ -271,6 +275,12 @@ let heatmapOption = {
               return "rgba(255, 0, 0, 0.5)"; // shallow red
             }
           },
+        },
+      },
+      tooltip: {
+        position: "bottom",
+        formatter: function (params) {
+          return date + " " + params.name + " AQI：" + params.value;
         },
       },
     },

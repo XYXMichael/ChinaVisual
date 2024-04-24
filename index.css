@@ -6,7 +6,7 @@
 
 
 /* 大屏幕（>= 1200px） */
-@media (min-width: 2000px) and (max-width: 3000px){
+@media (min-width: 2000px) and (max-width: 3000px) {
     html {
         font-size: 18px;
     }
@@ -68,7 +68,7 @@ body {
     grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 3;
-    width:100%
+    width: 100%
 }
 
 #heatmap {
@@ -85,6 +85,7 @@ body {
     max-height: 450px;
     /* 允许垂直方向滑动 */
 }
+
 #cell3 {
     grid-column-start: 2;
     grid-column-end: 4;
@@ -243,7 +244,7 @@ body {
 }
 
 
-.second-column .item div {
+.second-column .item .item-div {
     height: 100%;
 }
 

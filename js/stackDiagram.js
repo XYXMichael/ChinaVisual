@@ -35,12 +35,12 @@ function setStackChart(province) {
       }
       var stackOption = {
         color: [
-          "#6000ae",
-          "#fec325",
-          "#e900a0",
-          "#8f6a00",
-          "#35c9aa",
-          "#71d578",
+          "#A34343",
+          "#E9C874",
+          "#CBC8DD",
+          "#C0D6E8",
+          "#5BBCFF",
+          "#FFD1E3",
         ],
         tooltip: {
           trigger: "axis",
@@ -70,6 +70,10 @@ function setStackChart(province) {
         yAxis: [
           {
             type: "value",
+            max: function (value) {
+              console.log(value)
+              return Math.ceil(value.max * 0.8); // 设置最高高度为最大值的 1.2 倍
+            }
           },
         ],
         series: [
@@ -84,16 +88,16 @@ function setStackChart(province) {
             showSymbol: false,
             areaStyle: {
               opacity: 0.8,
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                {
-                  offset: 0,
-                  color: "rgb(96, 0, 174)",
-                },
-                {
-                  offset: 1,
-                  color: "rgb(135, 150, 150)",
-                },
-              ]),
+              // color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              //   {
+              //     offset: 0,
+              //     color: "rgb(96, 0, 174)",
+              //   },
+              //   {
+              //     offset: 1,
+              //     color: "rgb(135, 150, 150)",
+              //   },
+              // ]),
             },
             emphasis: {
               focus: "series",
@@ -111,16 +115,16 @@ function setStackChart(province) {
             showSymbol: false,
             areaStyle: {
               opacity: 0.8,
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                {
-                  offset: 0,
-                  color: "rgb(254, 195, 37)",
-                },
-                {
-                  offset: 1,
-                  color: "rgb(85, 20, 34)",
-                },
-              ]),
+              // color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              //   {
+              //     offset: 0,
+              //     color: "rgb(254, 195, 37)",
+              //   },
+              //   {
+              //     offset: 1,
+              //     color: "rgb(85, 20, 34)",
+              //   },
+              // ]),
             },
             emphasis: {
               focus: "series",
@@ -138,16 +142,16 @@ function setStackChart(province) {
             showSymbol: false,
             areaStyle: {
               opacity: 0.8,
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                {
-                  offset: 0,
-                  color: "rgb(233,0,160)",
-                },
-                {
-                  offset: 1,
-                  color: "rgb(152, 56, 53)",
-                },
-              ]),
+              // color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              //   {
+              //     offset: 0,
+              //     color: "rgb(233,0,160)",
+              //   },
+              //   {
+              //     offset: 1,
+              //     color: "rgb(152, 56, 53)",
+              //   },
+              // ]),
             },
             emphasis: {
               focus: "series",
@@ -165,16 +169,16 @@ function setStackChart(province) {
             showSymbol: false,
             areaStyle: {
               opacity: 0.8,
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                {
-                  offset: 0,
-                  color: "rgb(143,106,0)",
-                },
-                {
-                  offset: 1,
-                  color: "rgb(92, 119, 129)",
-                },
-              ]),
+              // color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              //   {
+              //     offset: 0,
+              //     color: "rgb(143,106,0)",
+              //   },
+              //   {
+              //     offset: 1,
+              //     color: "rgb(92, 119, 129)",
+              //   },
+              // ]),
             },
             emphasis: {
               focus: "series",
@@ -192,16 +196,16 @@ function setStackChart(province) {
             showSymbol: false,
             areaStyle: {
               opacity: 0.8,
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                {
-                  offset: 0,
-                  color: "rgb(53,201,170)",
-                },
-                {
-                  offset: 1,
-                  color: "rgb(14, 33, 170)",
-                },
-              ]),
+              // color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              //   {
+              //     offset: 0,
+              //     color: "rgb(53,201,170)",
+              //   },
+              //   {
+              //     offset: 1,
+              //     color: "rgb(14, 33, 170)",
+              //   },
+              // ]),
             },
             emphasis: {
               focus: "series",
@@ -219,16 +223,16 @@ function setStackChart(province) {
             showSymbol: false,
             areaStyle: {
               opacity: 0.8,
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                {
-                  offset: 0,
-                  color: "rgb(113,213,120)",
-                },
-                {
-                  offset: 1,
-                  color: "rgb(218, 222, 61)",
-                },
-              ]),
+              // color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              //   {
+              //     offset: 0,
+              //     color: "rgb(113,213,120)",
+              //   },
+              //   {
+              //     offset: 1,
+              //     color: "rgb(218, 222, 61)",
+              //   },
+              // ]),
             },
             emphasis: {
               focus: "series",
