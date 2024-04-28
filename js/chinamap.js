@@ -220,7 +220,7 @@ fetch("china.json")
   });
 
 function drawProvinceMap(province_name, attr) {
-  console.log(province_name, attr)
+  // console.log(province_name, attr)
   Promise.all([
     fetch(`province_map/${province_name}.json`).then((res) => res.json()),
     fetch(

@@ -6,7 +6,7 @@ var heatChart_option = {
   tooltip: {
     position: "top",
     formatter: function (params) {
-      console.log(params)
+      // console.log(params)
       let res = ''
       let series = params;
       res += series.marker + series.seriesName + " " + (series.data[1] + 1) + "月" + series.data[0] + "日" + "：" + series.data[2];

@@ -299,7 +299,6 @@ function setHotMap(date, type, province = null) {
           return [rowIndex, columnIndex, value, row.name];
         });
       }).flat();
-      console.log(transformedData)
       heatmapChart.setOption({
         series: {
           data: transformedData,
@@ -323,7 +322,6 @@ function setHotMap(date, type, province = null) {
           return [rowIndex, columnIndex, value, row.name];
         });
       }).flat();
-      console.log(transformedData)
       heatmapChart.setOption({
         series: {
           data: transformedData,
