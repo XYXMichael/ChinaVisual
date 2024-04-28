@@ -27,7 +27,7 @@ function getValueColor(value, minValue, maxValue) {
 }
 
 let heatmapOption = {
-  backgroundColor: "#404a59",
+  // backgroundColor: "#404a59",
   title: {
     show: false,
   },
@@ -61,7 +61,7 @@ let heatmapOption = {
       axisLabel: {
         interval: 0,
         fontSize: "1rem",
-        color:"#fff"
+        // color: "#fff"
       },
     },
     {
@@ -74,7 +74,7 @@ let heatmapOption = {
       axisLabel: {
         interval: 0,
         fontSize: "1rem",
-        color:"#fff"
+        // color: "#fff"
       },
     },
   ],
@@ -174,8 +174,8 @@ let heatmapOption = {
       },
       axisLabel: {
         fontSize: "1rem",
-        align: "left",
-        color: "#fff",
+        align: "center",
+        // color: "#fff",
         margin: 100,
       },
     },
@@ -369,6 +369,14 @@ async function setBarChart(date) {
 }
 
 async function setTogether(date, type) {
+  heatmapChart.setOption({
+    series: [
+      { data: [] },
+      {
+        data: [],
+      },
+    ],
+  });
   result1 = await getAverageData_Province_month(date.slice(0, 4), type);
   result2 = await getOneAverageData_province_day(date, "AQI");
   height_one = ((0.55 * parentWidth) / 12) * 33;
@@ -392,8 +400,22 @@ async function setTogether(date, type) {
       return [rowIndex, columnIndex, value, row.name];
     });
   }).flat();
-
-
+  heatmapChart.setOption({
+    yAxis: [
+      {
+        data: [],
+      },
+      {
+        data: [],
+      },
+    ],
+    series: [
+      { data: [] },
+      {
+        data: [],
+      },
+    ],
+  });
   heatmapChart.setOption({
     grid: [
       {
@@ -422,6 +444,7 @@ async function setTogether(date, type) {
 }
 
 async function setProvinceTogether(province, date, type) {
+
   result1 = await get_city_month(province, date.slice(0, 4), type);
   result2 = await get_city_average_daily(province, date, "AQI");
 
@@ -445,6 +468,22 @@ async function setProvinceTogether(province, date, type) {
       return [rowIndex, columnIndex, value, row.name];
     });
   }).flat();
+  heatmapChart.setOption({
+    yAxis: [
+      {
+        data: [],
+      },
+      {
+        data: [],
+      },
+    ],
+    series: [
+      { data: [] },
+      {
+        data: [],
+      },
+    ],
+  });
   heatmapChart.setOption({
     grid: [
       {

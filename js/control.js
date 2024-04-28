@@ -2,19 +2,19 @@ var date = "2013-01-01";
 // 初始化Echarts实例
 var myChart = echarts.init(document.getElementById("box2"));
 var province_div = document.getElementById("province");
-var province_name = "北京";
-var current_province = "北京市";
+// var province_name = "北京";
+// var current_province = "北京市";
 var data = [];
 
 // 日期修改
 document.getElementById("date_title").addEventListener("change", function () {
   date = document.getElementById("date_title").children[0].value;
   if (is_province) {
-    setControllor(date, current_province);
+    setControllor(date, current_city);
     setProvinceTogether(current_province, date, "AQI");
     drawProvinceMap(current_city, "AQI");
   } else {
-    setControllor(date, province_name);
+    setControllor(date, current_province_abbr);
     setTogether(date, "AQI");
     drawMap(null, date);
   }

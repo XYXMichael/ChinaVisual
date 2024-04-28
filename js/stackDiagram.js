@@ -1,6 +1,6 @@
 var stackChart = echarts.init(document.getElementById("stackChart"));
 var stackOption = {
-  backgroundColor: "#404a59",
+  // backgroundColor: "#404a59",
   color: [
     "#A34343",
     "#E9C874",
@@ -22,8 +22,8 @@ var stackOption = {
   legend: {
     data: ["PM2.5", "PM10", "CO", "NO2", "SO2", "O3"],
     textStyle: {
-      color: '#fff',
-      fontSize: 14
+      // color: '#fff',
+      fontSize: '1rem'
     },
   },
   grid: {
@@ -37,7 +37,9 @@ var stackOption = {
       type: "category",
       data: [],
       axisLabel: {
-        color: "#fff",
+        // color: "#fff",
+        fontSize: '0.8rem'
+
       }
     },
   ],
@@ -48,7 +50,9 @@ var stackOption = {
         return Math.ceil(value.max * 0.8); // 设置最高高度为最大值的 1.2 倍
       },
       axisLabel: {
-        color: "#fff",
+        // color: "#fff",
+        fontSize: '0.8rem'
+
       }
     },
   ],

@@ -2,7 +2,7 @@ var chartDom = document.getElementById("heatChart");
 var heatChart = echarts.init(chartDom);
 
 var heatChart_option = {
-  backgroundColor: "#404a59",
+  // backgroundColor: "#404a59",
   tooltip: {
     position: "top",
   },
@@ -18,9 +18,9 @@ var heatChart_option = {
     splitArea: {
       show: true,
     },
-    axisLabel: {
-      color: "#fff",
-    },
+    // axisLabel: {
+    //   color: "#fff",
+    // },
   },
   yAxis: {
     type: "category",
@@ -28,9 +28,9 @@ var heatChart_option = {
     splitArea: {
       show: true,
     },
-    axisLabel: {
-      color: "#fff",
-    },
+    // axisLabel: {
+    //   color: "#fff",
+    // },
   },
   series: [
     {
