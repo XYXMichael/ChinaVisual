@@ -5,6 +5,14 @@ var heatChart_option = {
   // backgroundColor: "#404a59",
   tooltip: {
     position: "top",
+    formatter: function (params) {
+      console.log(params)
+      let res = ''
+      let series = params;
+      res += series.marker + series.seriesName + " " + (series.data[1] + 1) + "月" + series.data[0] + "日" + "：" + series.data[2];
+
+      return res;
+    },
   },
   grid: {
     height: "85%",

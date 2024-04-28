@@ -24,7 +24,7 @@
 ![alt text](picture/stack.png)
 ## 开发环境
 + Echarts
-+ 原生JavaScript
++ 原生JavaScript HTML CSS
 ## 数据来源
 来自中国可视化大赛2021年数据，其中地图来源于DataV
 ## 实现效果

@@ -18,7 +18,7 @@ var radarOption = {
     shape: "circle",
     splitNumber: 10,
     axisName: {
-      fontSize: '1rem',
+      fontSize: '0.8rem',
       color: "rgb(238, 197, 102)",
     },
     splitLine: {

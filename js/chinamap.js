@@ -52,7 +52,7 @@ var option_map = {
       borderColor: "#0a0a0a", // 边界线条颜色
       borderWidth: 1, // 边界线条宽度
     },
-    zoom: 1,
+    zoom: 1.2,
     scaleLimit: {
       max: 2,
       min: 0.5,
@@ -301,7 +301,8 @@ function drawMap(attr, date) {
       /**
        * 设置地图省份下钻点击事件
        */
-
+      chinaMap.off("click");
+      chinaMap.off("dblclick");
       chinaMap.on("dblclick", function (item) {
         is_province = true;
         current_province_abbr = item.name;
@@ -346,6 +347,8 @@ Object.keys(buttonMapping).forEach((key) => {
       drawMap(buttonMapping[key], current_date);
       current_attr = buttonMapping[key];
     } else {
+      console.log(1)
+
       drawProvinceMap(current_province_abbr, buttonMapping[key]);
       current_attr = buttonMapping[key];
     }
@@ -359,6 +362,6 @@ document.getElementById("change").addEventListener("click", function () {
     drawMap(current_attr, date);
     setTogether(current_date, current_attr);
     setControllor(date, current_province_abbr);
-    
+
   }
 });

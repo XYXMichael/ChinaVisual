@@ -191,8 +191,6 @@ let heatmapOption = {
         var valueIndex = api.value(1);
         var value = api.value(2)
 
-
-
         var startPoint = api.coord([valueIndex, categoryIndex]);
         var width = api.size([0, 1])[0];
 

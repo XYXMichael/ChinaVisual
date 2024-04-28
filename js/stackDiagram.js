@@ -18,6 +18,17 @@ var stackOption = {
         backgroundColor: "#6a7985",
       },
     },
+    fontStyle: {
+      fontSize: '1rem'
+    },
+    formatter: function (params) {
+      let res = params[0].axisValue + " " + current_province
+      for (let i = 0; i < params.length; i++) {
+        let series = params[i];
+        res += "<br/>" + series.marker + series.seriesName + ": " + series.data;
+      }
+      return res;
+    },
   },
   legend: {
     data: ["PM2.5", "PM10", "CO", "NO2", "SO2", "O3"],
