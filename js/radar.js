@@ -3,8 +3,21 @@ setRadar("北京", "2013-01-01");
 var radarOption = {
   // backgroundColor: "#404a59",
   tooltip: {
-    triger: "item",
+    triger: "axis",
     position: 'right',
+    extraCssText: 'width:150px;height:auto;background-color:rgba(0,0,0,0.3);color:#fff',
+   formatter: function (params) {
+     //params[0].name表示x轴数据
+     let str = params.data[6] +'    '+params.data[7]+ '<br/>'
+     //设置浮层图形的样式跟随图中展示的颜色
+       str += "<span style='display:inline-block;width:10px;height:10px;border-radius:10px;background-color:gold;'></span>" + "\t" + "AQI : " + params.data[0].toString() + "<br/>";
+       str += "<span style='display:inline-block;width:10px;height:10px;border-radius:10px;background-color:gold;'></span>" + "\t" + "PM2.5 : " + params.data[1].toString() + "<br/>";
+       str += "<span style='display:inline-block;width:10px;height:10px;border-radius:10px;background-color:gold;'></span>" + "\t" + "PM10 : " + params.data[2].toString() + "<br/>";
+       str += "<span style='display:inline-block;width:10px;height:10px;border-radius:10px;background-color:gold;'></span>" + "\t" + "SO2 : " + params.data[3].toString() + "<br/>";
+       str += "<span style='display:inline-block;width:10px;height:10px;border-radius:10px;background-color:gold;'></span>" + "\t" + "NO2 : " + params.data[4].toString() + "<br/>";
+       str += "<span style='display:inline-block;width:10px;height:10px;border-radius:10px;background-color:gold;'></span>" + "\t" + "CO : " + params.data[5].toString() + "<br/>";
+     return str
+   },
   },
   radar: {
     indicator: [
@@ -33,8 +46,10 @@ var radarOption = {
         ].reverse(),
       },
     },
-    splitArea: {
-      show: false,
+    splitLine: {
+      lineStyle: {
+        color: 'rgba(211, 253, 250, 0.8)'
+      }
     },
     axisLine: {
       lineStyle: {
@@ -50,14 +65,19 @@ var radarOption = {
         width: 1,
         opacity: 0.5,
       },
+      emphasis: {
+        lineStyle: {
+          width: 3
+        }
+      },
       data: [],
       symbol: "none",
       itemStyle: {
         color: "#F9713C",
       },
-      areaStyle: {
-        opacity: 0.1,
-      },
+      // areaStyle: {
+      //   opacity: 0,
+      // },
     },
   ],
 };
@@ -66,7 +86,7 @@ function setRadar(province, date) {
   radarChart.setOption(
     {
       series: [{
-        date: []
+        data: []
       }]
     }
   );
@@ -84,23 +104,30 @@ function setRadar(province, date) {
       for (let i = 1; i < dataArray.length - 1; i++) {
         var row = dataArray[i].split(",");
 
-        if (row[1].slice(0, 7) == date.slice(0, 7)) {
-          var values = [
-            parseInt(row[13]),
-            parseFloat(row[2]),
-            parseFloat(row[3]),
-            parseFloat(row[4]),
-            parseFloat(row[5]),
-            parseFloat(row[6]),
-          ];
-          chartData.push(values);
-
-          // 更新每个指标的最大值
-          for (let j = 0; j < values.length; j++) {
-            if (values[j] > maxValues[j]) {
-              maxValues[j] = values[j] * 1.2;
+        if (row[1].slice(0, 10) == date.slice(0, 10)) {
+          for( let j = 0; j < 6; j++ ) {
+            row = dataArray[i+j].split(",");
+            var values = [
+              parseInt(row[13]),
+              parseFloat(row[2]),
+              parseFloat(row[3]),
+              parseFloat(row[4]),
+              parseFloat(row[5]),
+              parseFloat(row[6]),
+              row[0],
+              row[1],
+            ];
+            chartData.push(values);
+  
+            // 更新每个指标的最大值
+            for (let j = 0; j < values.length; j++) {
+              if (values[j] > maxValues[j]) {
+                maxValues[j] = values[j] * 1.2;
+              }
             }
           }
+          console.log(row[1].slice(0, 9));
+          
         }
       }
 

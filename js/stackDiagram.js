@@ -32,15 +32,20 @@ var stackOption = {
   },
   legend: {
     data: ["PM2.5", "PM10", "CO", "NO2", "SO2", "O3"],
+    orient: "vertical",
+    top: "15%",
+    left: "1%",
     textStyle: {
       // color: '#fff',
       fontSize: '1rem'
     },
   },
   grid: {
-    left: "3%",
-    right: "4%",
-    bottom: "3%",
+    innerHeight:'100%',
+    left: "8%",
+    right: "3%",
+    bottom: "20%",
+    top: "5%",
     containLabel: true,
   },
   xAxis: [
@@ -58,7 +63,7 @@ var stackOption = {
     {
       type: "value",
       max: function (value) {
-        return Math.ceil(value.max * 0.8); // 设置最高高度为最大值的 1.2 倍
+        return Math.ceil(value.max); // 设置最高高度为最大值的 1.2 倍
       },
       axisLabel: {
         // color: "#fff",
@@ -66,6 +71,20 @@ var stackOption = {
 
       }
     },
+  ],
+  
+  dataZoom: [
+    {
+      type: 'inside',
+      left:'8%',
+      start: 0,
+      end: 10,
+    },
+    {
+      left:'8%',
+      start: 0,
+      end: 10,
+    }
   ],
   series: [
     {
