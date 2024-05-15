@@ -252,6 +252,9 @@ var stackOption = {
   ],
 };
 setStackChart("上海");
+
+stackChart.setOption(stackOption);
+
 /**
  * 设置堆叠图表
  *

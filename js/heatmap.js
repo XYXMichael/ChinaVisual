@@ -176,7 +176,7 @@ let heatmapOption = {
         fontSize: "1rem",
         align: "center",
         // color: "#fff",
-        margin: 100,
+        margin: parentWidth*0.08,
       },
     },
   ],

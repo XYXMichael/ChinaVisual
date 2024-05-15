@@ -144,5 +144,8 @@ window.onload = function () {
 
   var maxHeight = document.getElementById("cell1").offsetHeight;
   document.getElementById("cell2").style.maxHeight = maxHeight + "px";
+  document.getElementById("cell1").style.maxHeight = maxHeight + "px";
+
+  // document.getElementById("cell4").style.maxHeight=document.getElementById("cell4").offsetHeight+"px";
   setTogether(current_date, current_attr);
 };
