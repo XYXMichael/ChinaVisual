@@ -97,6 +97,40 @@ async function setheatChart(place, type) {
   heatChart_option.series[0].name = place;
 
   heatChart.setOption(heatChart_option);
+  if (place > 6) {
+    document.getElementById('AQI_title').classList.add("long");
+  } else {
+    document.getElementById('AQI_title').classList.remove("long");
+  }
+  document.getElementById('AQI_title').innerHTML = place + 'AQI指标';
+}
+
+async function setheatCityChart(place, city,type ) {
+  let result = await getTypeData_City_year(
+    place,
+    city,
+    current_date.slice(0, 4),
+    type
+  );
+  result = result.map(function (item) {
+    return [
+      parseInt(item[0].slice(8, 10)) - 1,
+      parseInt(item[0].slice(5, 7)) - 1,
+      item[1] || "-",
+    ];
+  });
+  heatChart_option.series[0].data = result;
+  heatChart_option.series[0].name = place + " " +city;
+
+  heatChart.setOption(heatChart_option);
+
+  if (city.length > 6) {
+    document.getElementById('AQI_title').classList.add("long");
+  } else {
+    document.getElementById('AQI_title').classList.remove("long");
+  }
+  document.getElementById('AQI_title').innerHTML = city + ' AQI指标';
+
 }
 
 setheatChart(current_province, "AQI");

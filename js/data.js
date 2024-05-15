@@ -106,6 +106,7 @@ async function getTypeData_Province_year(province, year, type) {
   for (let i = 0; i < columns.length; i++) {
     if (type == columns[i]) {
       index = i;
+      break;
     }
   }
   let data = []
@@ -119,10 +120,41 @@ async function getTypeData_Province_year(province, year, type) {
     }
 
   }
-  // console.log(data)
   return data;
-
 }
+
+
+/**
+ * 获取某一年某个城市的某个指标的平均数据
+ * @param {*} date 日期
+ * @param {*} province 省
+ * @returns
+ */
+async function getTypeData_City_year(province, city, year, type) {
+  const res = await fetch(`data/province_city_daily/${province}/${city}.csv`);
+  const csvContent = await res.text();
+  var rows = csvContent.split("\n");
+  var columns = rows[0].split(",");
+  let index = 0
+
+  for (let i = 0; i < columns.length; i++) {
+    if (type === columns[i]) {
+      index = i;
+      break;
+    }
+  }
+
+  let data = []
+  for (var i = 1; i < rows.length - 1; i++) {
+    var row = rows[i];
+    var columns = row.split(",");
+    if (columns[2].slice(0, 4) === year) {
+      data.push([columns[2], columns[index]])
+    } 
+  }
+  return data;
+}
+
 
 
 

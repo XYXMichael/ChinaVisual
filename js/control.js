@@ -14,13 +14,15 @@ document.getElementById("date_title").addEventListener("change", function () {
     setProvinceTogether(current_province, date, "AQI");
     drawProvinceMap(current_city, "AQI");
     setRadar(current_province, date);
+    setheatCityChart(current_province,current_city,"AQI")
   } else {
     setControllor(date, current_province_abbr);
     setTogether(date, "AQI");
     setRadar(current_province_abbr, date);
     drawMap(null, date);
+    setheatChart(current_province, "AQI")
+
   }
-  setheatChart(current_province, "AQI")
 });
 
 // 设置圆环图配置

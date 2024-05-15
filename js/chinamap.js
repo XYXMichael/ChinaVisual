@@ -258,6 +258,7 @@ function drawProvinceMap(province_name, attr) {
     chinaMap.on("click", function (item) {
       current_city = item.name;
       setControllor(current_date, current_city);
+      setheatCityChart(current_province,current_city,"AQI")
     });
   });
 }
@@ -315,6 +316,7 @@ function drawMap(attr, date) {
         current_city =
           province2Capitals[provinceSimp2All[current_province_abbr]];
         setControllor(date, current_city);
+        setheatCityChart(current_province,current_city,"AQI")
       });
 
       chinaMap.on("click", function (item) {
@@ -346,9 +348,8 @@ Object.keys(buttonMapping).forEach((key) => {
     if (is_province == 0) {
       drawMap(buttonMapping[key], current_date);
       current_attr = buttonMapping[key];
+      
     } else {
-      console.log(1)
-
       drawProvinceMap(current_province_abbr, buttonMapping[key]);
       current_attr = buttonMapping[key];
     }
@@ -362,6 +363,6 @@ document.getElementById("change").addEventListener("click", function () {
     drawMap(current_attr, date);
     setTogether(current_date, current_attr);
     setControllor(date, current_province_abbr);
-
+    setheatChart(current_province,"AQI")
   }
 });
