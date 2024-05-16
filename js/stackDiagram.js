@@ -24,7 +24,7 @@ var stackOption = {
     formatter: function (params) {
       let res = params[0].axisValue + " " + current_province 
       if(is_province){
-        res = params[0].axisValue + " " + current_province + current_city
+        res = params[0].axisValue + " " + current_province +" "+ current_city
       }
       
       for (let i = 0; i < params.length; i++) {

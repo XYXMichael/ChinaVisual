@@ -5,10 +5,9 @@ var radarOption = {
   tooltip: {
     triger: "axis",
     position: 'right',
-    extraCssText: 'width:150px;height:auto;background-color:rgba(0,0,0,0.3);color:#fff',
    formatter: function (params) {
      //params[0].name表示x轴数据
-     let str = params.data[6] +'    '+params.data[7]+ '<br/>'
+     let str = params.data[7] +'<br/>'+params.data[6]+ '<br/>'
      //设置浮层图形的样式跟随图中展示的颜色
        str += "<span style='display:inline-block;width:10px;height:10px;border-radius:10px;background-color:gold;'></span>" + "\t" + "AQI : " + params.data[0].toString() + "<br/>";
        str += "<span style='display:inline-block;width:10px;height:10px;border-radius:10px;background-color:gold;'></span>" + "\t" + "PM2.5 : " + params.data[1].toString() + "<br/>";
