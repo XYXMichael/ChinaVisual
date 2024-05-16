@@ -8,6 +8,8 @@ function getPointSize(value) {
   else if (value > 3000) return 4;
   else if (value > 2000) return 5;
   else if (value > 1000) return 7;
+  else if (value > 700) return 5;
+
   else if (value > 500) return 8;
   else if (value > 400) return 9;
   else if (value > 200) return 6;
@@ -21,6 +23,8 @@ function getBlurSize(value) {
   else if (value > 3000) return 5;
   else if (value > 2000) return 5;
   else if (value > 1000) return 5;
+  else if (value > 700) return 3;
+
   else if (value > 500) return 4;
   else if (value > 400) return 6;
   else if (value > 200) return 4;
