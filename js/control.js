@@ -12,8 +12,8 @@ document.getElementById("date_title").addEventListener("change", function () {
   if (is_province) {
     setControllor(date, current_city);
     setProvinceTogether(current_province, date, "AQI");
-    drawProvinceMap(current_city, "AQI");
-    setRadar(current_province, date);
+    drawProvinceMap(current_province_abbr, "AQI" , date);
+    setCityRadar(current_province,current_city, date);
     setheatCityChart(current_province,current_city,"AQI")
   } else {
     setControllor(date, current_province_abbr);

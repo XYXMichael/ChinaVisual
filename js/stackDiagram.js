@@ -22,7 +22,11 @@ var stackOption = {
       fontSize: '1rem'
     },
     formatter: function (params) {
-      let res = params[0].axisValue + " " + current_province
+      let res = params[0].axisValue + " " + current_province 
+      if(is_province){
+        res = params[0].axisValue + " " + current_province + current_city
+      }
+      
       for (let i = 0; i < params.length; i++) {
         let series = params[i];
         res += "<br/>" + series.marker + series.seriesName + ": " + series.data;
@@ -286,6 +290,49 @@ function setStackChart(province) {
         no2Array.push(parseFloat(row[5]));
         coArray.push(parseFloat(row[6]));
         o3Array.push(parseFloat(row[7]));
+      }
+      stackOption.xAxis[0].data = dateArray
+      stackOption.series[0].data = pm25Array
+      stackOption.series[1].data = pm10Array
+      stackOption.series[2].data = so2Array
+      stackOption.series[3].data = no2Array
+      stackOption.series[4].data = coArray
+      stackOption.series[5].data = o3Array
+
+      stackChart.setOption(stackOption);
+    });
+}
+/**
+ * 绘制省份市区堆叠图
+ * @param {*} province 省份
+ * @param {*} city 市区
+ */
+function setCityStackChart(province,city) {
+  // stackChart.clear();
+  var name = provinceSimp2All[province];
+  fetch(`data/province_city_daily/${province}/${city}.csv`)
+    .then((response) => response.text())
+    .then((data) => {
+      /**
+       * 获取数据
+       */
+      var dataArray = data.split("\n");
+      var dateArray = [];
+      var pm25Array = [];
+      var pm10Array = [];
+      var so2Array = [];
+      var no2Array = [];
+      var coArray = [];
+      var o3Array = [];
+      for (let i = 1; i < dataArray.length; i++) {
+        var row = dataArray[i].split(",");
+        dateArray.push(row[2]);
+        pm25Array.push(parseInt(row[3]));
+        pm10Array.push(parseFloat(row[4]));
+        so2Array.push(parseFloat(row[5]));
+        no2Array.push(parseFloat(row[6]));
+        coArray.push(parseFloat(row[7]));
+        o3Array.push(parseFloat(row[8]));
       }
       stackOption.xAxis[0].data = dateArray
       stackOption.series[0].data = pm25Array

@@ -219,12 +219,12 @@ fetch("china.json")
     drawMap(current_attr, current_date);
   });
 
-function drawProvinceMap(province_name, attr) {
-  // console.log(province_name, attr)
+function drawProvinceMap(province_name, attr,date) {
+  console.log(`province_map/${province_name}.json`)
   Promise.all([
     fetch(`province_map/${province_name}.json`).then((res) => res.json()),
     fetch(
-      `data/origin/CN-Reanalysis-daily-${current_date
+      `data/origin/CN-Reanalysis-daily-${date
         .replace("-", "")
         .replace("-", "")}00.csv`
     ).then((response) => response.text()),
@@ -258,6 +258,8 @@ function drawProvinceMap(province_name, attr) {
     chinaMap.on("click", function (item) {
       current_city = item.name;
       setControllor(current_date, current_city);
+      setCityRadar(current_province, current_city, current_date);
+      setCityStackChart(current_province,current_city);
       setheatCityChart(current_province,current_city,"AQI")
     });
   });
@@ -307,7 +309,7 @@ function drawMap(attr, date) {
       chinaMap.on("dblclick", function (item) {
         is_province = true;
         current_province_abbr = item.name;
-        drawProvinceMap(current_province_abbr, attr, temIndex);
+        drawProvinceMap(current_province_abbr, attr, current_date);
         setProvinceTogether(
           provinceSimp2All[current_province_abbr],
           current_date,
@@ -316,6 +318,7 @@ function drawMap(attr, date) {
         current_city =
           province2Capitals[provinceSimp2All[current_province_abbr]];
         setControllor(date, current_city);
+        setCityRadar(current_province, current_city, date);
         setheatCityChart(current_province,current_city,"AQI")
       });
 
@@ -350,7 +353,7 @@ Object.keys(buttonMapping).forEach((key) => {
       current_attr = buttonMapping[key];
       
     } else {
-      drawProvinceMap(current_province_abbr, buttonMapping[key]);
+      drawProvinceMap(current_province_abbr, buttonMapping[key], current_date);
       current_attr = buttonMapping[key];
     }
   });

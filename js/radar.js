@@ -126,7 +126,62 @@ function setRadar(province, date) {
               }
             }
           }
-          console.log(row[1].slice(0, 9));
+          
+        }
+      }
+
+      // 更新 indicator 的 max 属性
+      for (let i = 0; i < radarOption.radar.indicator.length; i++) {
+        radarOption.radar.indicator[i].max = maxValues[i];
+      }
+
+      radarOption.series[0].name = province;
+      radarOption.series[0].data = chartData;
+      radarChart.setOption(radarOption);
+    });
+}
+function setCityRadar(province,city, date) {
+  radarChart.setOption(
+    {
+      series: [{
+        data: []
+      }]
+    }
+  );
+  fetch(`data/province_city_daily/${province}/${city}.csv`)
+    .then((response) => response.text())
+    .then((data) => {
+      /**
+       * 获取数据
+       */
+      var dataArray = data.split("\n");
+      var chartData = [];
+      var maxValues = [0, 0, 0, 0, 0, 0]; // 存储每个指标的最大值
+      for (let i = 1; i < dataArray.length - 1; i++) {
+        var row = dataArray[i].split(",");
+
+        if (row[2].slice(0, 10) == date.slice(0, 10)) {
+          for( let j = 0; j < 6; j++ ) {
+            row = dataArray[i+j].split(",");
+            var values = [
+              parseInt(row[14]),
+              parseFloat(row[3]),
+              parseFloat(row[4]),
+              parseFloat(row[5]),
+              parseFloat(row[6]),
+              parseFloat(row[7]),
+              row[1],
+              row[2],
+            ];
+            chartData.push(values);
+  
+            // 更新每个指标的最大值
+            for (let j = 0; j < values.length; j++) {
+              if (values[j] > maxValues[j]) {
+                maxValues[j] = values[j] * 1.2;
+              }
+            }
+          }
           
         }
       }
